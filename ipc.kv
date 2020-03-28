@@ -1,0 +1,45 @@
+#:kivy 1.10.1
+
+<IPC>:
+    selection_tool:selection_tool
+    resize_tool:resize_tool
+    crop_tool:crop_tool
+    laso_tool:laso_tool
+
+    GridLayout:
+        cols:3
+        size_hint: 0.3,0.1
+        pos_hint: {"x":0,"top":1}
+        Button:
+            id:file
+            text: "New"
+        Button:
+            id:tools
+            text: "Open"
+            on_release: root.open_file()
+        Button:
+            id:image
+            text: "Save"
+
+    
+    GridLayout:
+        cols: 4
+        size_hint: 0.3,0.3
+        pos_hint:{"x":0,"top":0.9}
+        Button:
+            id:selection_tool
+            text: "1"
+        Button:
+            id:resize_tool
+            text: "2"
+        Button:
+            id:crop_tool
+            text: "3"
+        Button:
+            id:laso_tool
+            text: "4"
+
+    Image:
+        size_hint:0.7,0.7
+        pos_hint: {"x":0.3,"top":0.8}
+        source: "1.jpeg"
