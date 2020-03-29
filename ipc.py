@@ -6,6 +6,9 @@ from kivy.uix.button import Button
 from kivy.uix.dropdown import DropDown
 from kivy.uix.image import Image as Im
 from kivy.properties import ObjectProperty
+from kivy.uix.relativelayout import RelativeLayout
+from kivy.uix.slider import Slider
+from kivy.uix.colorpicker import ColorPicker
 from kivy.graphics import Color, Ellipse, Line
 from PIL import Image
 

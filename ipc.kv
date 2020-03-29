@@ -7,8 +7,8 @@
     laso_tool:laso_tool
 
     GridLayout:
-        cols:3
-        size_hint: 0.3,0.1
+        cols:4
+        size_hint: 0.4,0.05
         pos_hint: {"x":0,"top":1}
         Button:
             id:file
@@ -20,6 +20,9 @@
         Button:
             id:image
             text: "Save"
+        Button:
+            id:image
+            text: "Export"
 
     
     GridLayout:
@@ -36,10 +39,54 @@
             id:crop_tool
             text: "3"
         Button:
-            id:laso_tool
+            id: text_tool
             text: "4"
+
+        Button:
+            id:pen_tool
+            text: "5"
+        Button:
+            id:brush_tool
+            text: "6"
+        Button:
+            id:eraser_tool
+            text: "7"
+        Button:
+            id:laso_tool
+            text: "8"
+
 
     Image:
         size_hint:0.7,0.7
         pos_hint: {"x":0.3,"top":0.8}
         source: "1.jpeg"
+
+    ColorPicker:
+        size_hint:0.4,0.4
+        pos_hint: {"left":1,"bot":1}
+    
+    FloatLayout:
+        size_hint:0.3,0.1
+        pos_hint: {"x":0,"top":0.5}
+        Label:
+            pos_hint: {"x":-0.4,"top":1}
+            text:"label2"
+            color:1,1,1,1
+        Slider:
+            pos_hint: {"right":1,"top":1}
+            size_hint:0.75,1
+            min:0
+            max:100
+
+    FloatLayout:
+        size_hint:0.3,0.1
+        pos_hint: {"x":0,"top":0.55}
+        Label:
+            pos_hint: {"x":-0.4,"top":1}
+            text:"label2"
+            color:1,1,1,1
+        Slider:
+            pos_hint: {"right":1,"top":1}
+            size_hint:0.75,1
+            min:0
+            max:100
