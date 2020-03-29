@@ -31,29 +31,37 @@
         pos_hint:{"x":0,"top":0.9}
         Button:
             id:selection_tool
-            text: "1"
+            background_normal: "./assets/SelectionRectangle-Icon.png"
+            border:0,0,0,0
         Button:
             id:resize_tool
-            text: "2"
+            background_normal: "./assets/TransformScale-Icon.png"
+            border:0,0,0,0
         Button:
             id:crop_tool
-            text: "3"
+            background_normal: "./assets/SelectionScissors-Icon.png"
+            border:0,0,0,0
         Button:
             id: text_tool
-            text: "4"
+            background_normal: "./assets/TextTool-Icon.png"
+            border:0,0,0,0
 
         Button:
             id:pen_tool
-            text: "5"
+            background_normal: "./assets/BrushPencil-Icon.png"
+            border:0,0,0,0
         Button:
             id:brush_tool
-            text: "6"
+            background_normal: "./assets/BrushPaintbrush-Icon.png"
+            border:0,0,0,0
         Button:
             id:eraser_tool
-            text: "7"
+            background_normal: "./assets/Eraser-Icon.png"
+            border:0,0,0,0
         Button:
             id:laso_tool
-            text: "8"
+            background_normal: "./assets/SelectionLasso-Icon.png"
+            border:0,0,0,0
 
 
     Image:
@@ -62,6 +70,7 @@
         source: "1.jpeg"
 
     ColorPicker:
+        color:0,0,0,1
         size_hint:0.4,0.4
         pos_hint: {"left":1,"bot":1}
     
@@ -83,7 +92,7 @@
         pos_hint: {"x":0,"top":0.55}
         Label:
             pos_hint: {"x":-0.4,"top":1}
-            text:"label2"
+            text:"label1"
             color:1,1,1,1
         Slider:
             pos_hint: {"right":1,"top":1}
