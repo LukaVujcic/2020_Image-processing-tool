@@ -99,3 +99,35 @@
             size_hint:0.75,1
             min:0
             max:100
+
+
+
+    FloatLayout:
+        size_hint:0.7,0.7
+        pos_hint:{"x":0.15,"y":0.15}
+        canvas.before: 
+            Color: 
+                rgba: 0,0,0.05,0.98
+            Rectangle: 
+                pos: self.pos 
+                size: self.size 
+
+        Button:
+            size_hint:0.2,0.1
+            pos_hint:{"x":0.25,"y":0.02}
+            text:"Export"
+        Button:
+            text:"Cancel"
+            size_hint:0.2,0.1
+            pos_hint:{"x":0.55,"y":0.02}
+        FileChooser:
+            size_hint:0.8,0.7
+            pos_hint:{"x":0.1,"y":0.2}
+            path:"./"
+            FileChooserListLayout:
+                canvas.before: 
+                    Color: 
+                        rgba: 0,0.05,0.1,0.7
+                    Rectangle: 
+                        pos: self.pos 
+                        size: self.size 
