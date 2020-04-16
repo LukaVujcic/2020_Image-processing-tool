@@ -5,7 +5,7 @@
     resize_tool:resize_tool
     crop_tool:crop_tool
     laso_tool:laso_tool
-    save_file_popup:save_file_popup
+    img_id:img_id
 
     GridLayout:
         cols:4
@@ -66,9 +66,10 @@
 
 
     Image:
+        id:img_id
         size_hint:0.7,0.7
         pos_hint: {"x":0.3,"top":0.8}
-        source: "1.jpeg"
+        #source: "1.jpeg"
 
     ColorPicker:
         color:0,0,0,1
@@ -102,38 +103,49 @@
             max:100
 
 
-    Popup:
-        id:save_file_popup
-        title: "Export:"
-        size_hint:0.7,0.7
-        pos_hint:{"x":0.15,"y":0.15}
-        FloatLayout:
-            size_hint:1,1
-            pos_hint:{"x":0,"y":0}
-            canvas.before: 
-                Color: 
-                    rgba: 0,0,0.05,0.98
-                Rectangle: 
-                    pos: self.pos 
-                    size: self.size 
+<CustomPopup>:
 
-            Button:
-                size_hint:0.2,0.1
-                pos_hint:{"x":0.25,"y":0.02}
-                text:"Export"
-            Button:
-                text:"Cancel"
-                size_hint:0.2,0.1
-                pos_hint:{"x":0.55,"y":0.02}
-                on_release:root.close_save_file_popup()
-            FileChooser:
-                size_hint:0.8,0.7
-                pos_hint:{"x":0.1,"y":0.2}
-                path:"./"
-                FileChooserListLayout:
-                    canvas.before: 
-                        Color: 
-                            rgba: 0,0.05,0.1,0.7
-                        Rectangle: 
-                            pos: self.pos 
-                            size: self.size 
+    fc:fc
+
+    title: "Export/Open:"
+    size_hint:0.7,0.7
+    pos_hint:{"x":0.15,"y":0.15}
+    auto_dismiss: True
+    FloatLayout:
+        size_hint:1,1
+        pos_hint:{"x":0,"y":0}
+        canvas.before: 
+            Color: 
+                rgba: 0,0,0.05,0.98
+            Rectangle: 
+                pos: self.pos
+                size: self.size 
+
+        Button:
+            size_hint:0.2,0.1
+            pos_hint:{"x":0.1,"y":0.02}
+            text:"Export"
+        
+        Button:
+            size_hint:0.2,0.1
+            pos_hint:{"x":0.4,"y":0.02}
+            text:"Open"
+            on_release:root.open_image()
+
+        Button:
+            text:"Cancel"
+            size_hint:0.2,0.1
+            pos_hint:{"x":0.7,"y":0.02}
+            on_release:root.dismiss()
+        FileChooser:
+            id:fc
+            size_hint:0.8,0.7
+            pos_hint:{"x":0.1,"y":0.2}
+            path:"./"
+            FileChooserListLayout:
+                canvas.before: 
+                    Color: 
+                        rgba: 0,0.05,0.1,0.7
+                    Rectangle: 
+                        pos: self.pos 
+                        size: self.size

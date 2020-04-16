@@ -14,10 +14,32 @@ from kivy.uix.popup import Popup
 from kivy.graphics import Color, Ellipse, Line
 from kivy.properties import ObjectProperty
 from PIL import Image
+import os
 
 
 #im = Image.open("WhatsApp Image 2020-01-04 at 00.39.54.jpeg")
 #im.show()
+
+# mkdir -p /mnt/ram
+# mount -t ramfs -o size=20m ramfs /mnt/ram
+# umount /mnt
+
+image_path=""
+
+class CustomPopup(Popup):
+
+    fc = ObjectProperty(None)
+
+    def close_save_file_popup(self):
+        popup.dismiss(force=True)
+
+    def open_image(self):
+        image_path=self.fc.selection[0]
+        IPC().reload_image()
+        self.dismiss()
+
+    def save_file(self):
+        pass
 
 class IPC(FloatLayout):
     selection_tool = ObjectProperty(None)
@@ -25,18 +47,23 @@ class IPC(FloatLayout):
     crop_tool = ObjectProperty(None)
     laso_tool = ObjectProperty(None)
     save_file_popup = ObjectProperty(None)
-    lab = ObjectProperty(None)
+    img_id = ObjectProperty(None)
+    current_path="./"
 
-    def close_save_file_popup(self):
-        #TODO
-        #self.save_file_popup.dismiss(force=True)
-        #tmp solution
-        self.save_file_popup.size_hint=0,0
-        self.save_file_popup.pos_hint={"x":1,"y":1}
-        print("Cao")
 
+    def init(self):
+        pass
+    
+    def reload_image(self):
+        self.img_id.source=image_path
+        self.img_id.reload() 
+
+    def open_file(self):
+        popup = CustomPopup()
+        popup.open()
 
 class IPCApp(App):
+    
     def build(self):
         return IPC()
 
