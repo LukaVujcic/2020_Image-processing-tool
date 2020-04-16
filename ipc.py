@@ -25,10 +25,16 @@ import os
 # umount /mnt
 
 image_path=""
+im = 0
 
 class CustomPopup(Popup):
 
     fc = ObjectProperty(None)
+    txt_input = ObjectProperty(None)
+
+    def update_text_input(self):
+        for i in self.fc.selection:
+            self.txt_input.text=i
 
     def close_save_file_popup(self):
         popup.dismiss(force=True)
@@ -56,7 +62,20 @@ class CustomPopup(Popup):
 
 
     def save_file(self):
-        pass
+
+        if self.txt_input!="":
+            url=self.txt_input.text
+            ext=self.txt_input.text[self.txt_input.text.index('.')+1:]
+            print(ext)
+        try:
+            ext=ext.upper()
+            if ext=='BMP' or ext=='JPEG' or ext=='PNG':
+                im=im.convert('RGB')
+                im.save(url,ext)
+        except ValueError:
+            print('ValueError')
+        except IOError:
+            print('IOError')
 
 class IPC(FloatLayout):
     selection_tool = ObjectProperty(None)

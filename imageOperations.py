@@ -1,5 +1,6 @@
 from PIL import Image  
 import PIL
+'''
 #Cuva sliku u zadatom formatu
 def SaveImage(myImage,url,ext):
     try:
@@ -12,6 +13,9 @@ def SaveImage(myImage,url,ext):
     except IOError:
         print('IOError')
 #Otvara sliku sa date url adrese i vraca pillow objekat Image
+'''
+'''
+Open IMAGE fja vec postoji
 def OpenImage(url):
     try:
         myImage=Image.open(url,mode='r')
@@ -25,3 +29,4 @@ def OpenImage(url):
 #Primer pokretanja
 #myimage=OpenImage('1.jpeg')
 #SaveImage(myimage,"2","bmp")
+'''
