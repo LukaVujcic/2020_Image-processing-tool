@@ -38,6 +38,23 @@ class CustomPopup(Popup):
         IPC().reload_image()
         self.dismiss()
 
+        os.system("mkdir -p ./tmp")
+        os.system("mount -t ramfs -o size=50m ramfs ./tmp")
+        os.system("cp " + image_path + " ./tmp/")
+                
+        c = len(image_path)-1
+        while image_path[c]!='/' and c>0:
+            c=c-1
+        c=c+1
+        file_name = image_path[c:]
+        
+        image_path=image_path [:c]
+        image_path=image_path + "tmp/" + file_name
+
+        im = Image.open(image_path)
+        #image_reload poziv
+
+
     def save_file(self):
         pass
 
