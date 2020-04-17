@@ -25,7 +25,7 @@ import os
 # umount /mnt
 
 image_path=""
-im = 0
+im = None
 
 class CustomPopup(Popup):
 
@@ -37,12 +37,15 @@ class CustomPopup(Popup):
             self.txt_input.text=i
 
     def close_save_file_popup(self):
-        popup.dismiss(force=True)
+        popup.dismiss()
 
     def open_image(self):
-        image_path=self.fc.selection[0]
-        IPC().reload_image()
-        self.dismiss()
+
+        global image_path
+        global im
+
+        for i in self.fc.selection:
+            image_path=i
 
         os.system("mkdir -p ./tmp")
         os.system("mount -t ramfs -o size=50m ramfs ./tmp")
@@ -58,20 +61,24 @@ class CustomPopup(Popup):
         image_path=image_path + "tmp/" + file_name
 
         im = Image.open(image_path)
-        #image_reload poziv
+        print(image_path)
+        #IPC().reload_image() ne radi iz nekog razloga mora da se pozove iz IPC klase
+        self.dismiss()
 
 
     def save_file(self):
 
+        self.dismiss()
+
         if self.txt_input!="":
             url=self.txt_input.text
             ext=self.txt_input.text[self.txt_input.text.index('.')+1:]
-            print(ext)
         try:
             ext=ext.upper()
             if ext=='BMP' or ext=='JPEG' or ext=='PNG':
-                im=im.convert('RGB')
-                im.save(url,ext)
+                image=im.convert('RGB')
+                image.save(url,ext)
+                pass
         except ValueError:
             print('ValueError')
         except IOError:
@@ -91,6 +98,7 @@ class IPC(FloatLayout):
         pass
     
     def reload_image(self):
+        global image_path
         self.img_id.source=image_path
         self.img_id.reload() 
 

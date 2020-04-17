@@ -20,7 +20,8 @@
             on_release: root.open_file()
         Button:
             id:image
-            text: "Save"
+            text: "Reload"
+            on_release: root.reload_image()
         Button:
             id:image
             text: "Export"
@@ -111,7 +112,7 @@
     title: "Export/Open:"
     size_hint:0.7,0.7
     pos_hint:{"x":0.15,"y":0.15}
-    auto_dismiss: True
+    auto_dismiss: False
     FloatLayout:
         size_hint:1,1
         pos_hint:{"x":0,"y":0}
