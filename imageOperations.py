@@ -10,7 +10,7 @@ def applyOperationOnRegion(f,myImage,box):
         print(e)
 
 #Cuva sliku u zadatom formatu
-def SaveImage(myImage,url,ext):
+def saveImage(myImage,url,ext):
     try:
         ext=ext.upper()
         if ext=='BMP' or ext=='JPEG' or ext=='PNG':
@@ -20,6 +20,21 @@ def SaveImage(myImage,url,ext):
         print('ValueError')
     except IOError:
         print('IOError')
+#Postavlja watermark na sliku
+def setWatermark(imageSource,imageWatermark,position):
+    try:
+        if imageWatermark.format.upper()=='PNG':
+            width, height = imageSource.size
+            transparent = Image.new('RGBA', (width, height), (0,0,0,0))
+            transparent.paste(imageSource, (0,0))
+            transparent.paste(imageWatermark, position, mask=watermark)
+            return transparent
+        else:
+            print("Watermark must be PNG")
+            raise Exception
+    except Exception as e:
+        print(e)
+
 #Otvara sliku sa date url adrese i vraca pillow objekat Image
 #Open IMAGE fja vec postoji
 '''
@@ -41,4 +56,6 @@ def imageGrayScale(myimage):
 #myimage=Image.open("1.jpeg",mode='r')
 #myimage=applyOperationOnRegion(imageGrayScale,myimage,(40,100,200,200))
 #myimage.show()
-#SaveImage(myimage,"2.jpeg","jpeg")
+#saveImage(myimage,"2.jpeg","jpeg")
+#watermark=Image.open("watermark.png",mode="r")
+#setWatermark(myimage,watermark,(0,0)).show()
