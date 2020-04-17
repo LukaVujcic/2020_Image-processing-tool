@@ -47,9 +47,10 @@ class CustomPopup(Popup):
         for i in self.fc.selection:
             image_path=i
 
-        os.system("mkdir -p ./tmp")
-        os.system("mount -t ramfs -o size=50m ramfs ./tmp")
-        os.system("cp " + image_path + " ./tmp/")
+        if os.system("cd tmp")!=0:
+            os.system("mkdir -p ./tmp")
+            os.system("mount -t ramfs -o size=50m ramfs ./tmp")
+            os.system("cp " + image_path + " ./tmp/")
                 
         c = len(image_path)-1
         while image_path[c]!='/' and c>0:
