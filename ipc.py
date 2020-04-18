@@ -113,7 +113,7 @@ class IPC(FloatLayout):
 
     
     def on_touch_down(self,touch):
-        if (self.active_tool == self.selection_tool) and (touch.osx>0.3 or touch.osy>0.3):
+        if (self.active_tool == self.selection_tool) and (touch.osx>0.3 or touch.osy>git 0.3):
             self.area_start = touch
             print("Area Changed")
         if self.disabled and self.collide_point(*touch.pos):
@@ -123,7 +123,7 @@ class IPC(FloatLayout):
                 return True
 
     def on_touch_up(self,touch):
-        if self.active_tool == self.selection_tool:
+        if (self.active_tool == self.selection_tool) and (touch.osx>0.3 or touch.osy>git 0.3):
             self.area_end = touch
         if self.disabled:
             return
