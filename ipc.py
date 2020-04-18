@@ -27,6 +27,16 @@ import os
 image_path=""
 im = None
 
+class Point:
+    def __init__(self,**kwargs):
+        self.x=0
+        self.y=0
+
+    def Point(self,x,y):
+        self.x=x
+        self.y=y
+
+
 class CustomPopup(Popup):
 
     fc = ObjectProperty(None)
@@ -93,10 +103,33 @@ class IPC(FloatLayout):
     save_file_popup = ObjectProperty(None)
     img_id = ObjectProperty(None)
     current_path="./"
-
+    area_start = Point()
+    area_end = Point()
+    active_tool = None
+    
 
     def init(self):
         pass
+
+    
+    def on_touch_down(self,touch):
+        if (self.active_tool == self.selection_tool) and (touch.osx>0.3 or touch.osy>0.3):
+            self.area_start = touch
+            print("Area Changed")
+        if self.disabled and self.collide_point(*touch.pos):
+            return True
+        for child in self.children[:]:
+            if child.dispatch('on_touch_down', touch):
+                return True
+
+    def on_touch_up(self,touch):
+        if self.active_tool == self.selection_tool:
+            self.area_end = touch
+        if self.disabled:
+            return
+        for child in self.children[:]:
+            if child.dispatch('on_touch_up', touch):
+                return True
     
     def reload_image(self):
         global image_path
@@ -106,6 +139,9 @@ class IPC(FloatLayout):
     def open_file(self):
         popup = CustomPopup()
         popup.open()
+
+    def activate_selection_tool(self):
+        self.active_tool=self.selection_tool
 
 class IPCApp(App):
     
