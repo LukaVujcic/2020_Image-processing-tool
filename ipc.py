@@ -16,26 +16,8 @@ from kivy.properties import ObjectProperty
 from PIL import Image
 import os
 
-
-#im = Image.open("WhatsApp Image 2020-01-04 at 00.39.54.jpeg")
-#im.show()
-
-# mkdir -p /mnt/ram
-# mount -t ramfs -o size=20m ramfs /mnt/ram
-# umount /mnt
-
 image_path=""
 im = None
-
-class Point:
-    def __init__(self,**kwargs):
-        self.x=0
-        self.y=0
-
-    def Point(self,x,y):
-        self.x=x
-        self.y=y
-
 
 class CustomPopup(Popup):
 
@@ -60,7 +42,7 @@ class CustomPopup(Popup):
         if os.system("cd tmp")!=0:
             os.system("mkdir -p ./tmp")
             os.system("mount -t ramfs -o size=50m ramfs ./tmp")
-            os.system("cp " + image_path + " ./tmp/")
+        os.system("cp " + image_path + " ./tmp/")
                 
         c = len(image_path)-1
         while image_path[c]!='/' and c>0:
@@ -103,8 +85,8 @@ class IPC(FloatLayout):
     save_file_popup = ObjectProperty(None)
     img_id = ObjectProperty(None)
     current_path="./"
-    area_start = Point()
-    area_end = Point()
+    area_start = None
+    area_end = None
     active_tool = None
     
 
@@ -114,8 +96,7 @@ class IPC(FloatLayout):
     
     def on_touch_down(self,touch):
         if (self.active_tool == self.selection_tool) and (touch.osx>0.3 or touch.osy>0.3):
-            self.area_start = touch
-            print("Area Changed")
+            self.area_start = [(touch.osx-0.3)*(1/0.7),((touch.osy-0.15)*(1/0.85))]
         if self.disabled and self.collide_point(*touch.pos):
             return True
         for child in self.children[:]:
@@ -124,7 +105,7 @@ class IPC(FloatLayout):
 
     def on_touch_up(self,touch):
         if (self.active_tool == self.selection_tool) and (touch.osx>0.3 or touch.osy>0.3):
-            self.area_end = touch
+            self.area_end = [(touch.osx-0.3)*(1/0.7),((touch.osy-0.15)*(1/0.85))]
         if self.disabled:
             return
         for child in self.children[:]:
@@ -134,14 +115,30 @@ class IPC(FloatLayout):
     def reload_image(self):
         global image_path
         self.img_id.source=image_path
-        self.img_id.reload() 
+        self.img_id.reload()
 
     def open_file(self):
         popup = CustomPopup()
         popup.open()
 
+    def save_temp_image(self):
+        global image_path
+        url=image_path
+        ext=image_path[image_path.index('.')+1:]
+        try:
+            ext=ext.upper()
+            if ext=='BMP' or ext=='JPEG' or ext=='PNG':
+                image=im.convert('RGB')
+                image.save(url,ext)
+                pass
+        except ValueError:
+            print('ValueError')
+        except IOError:
+            print('IOError')
+
     def activate_selection_tool(self):
         self.active_tool=self.selection_tool
+
 
 class IPCApp(App):
     
