@@ -1,10 +1,14 @@
 from PIL import Image  
 import PIL
 #Radi custom operaciju f na slici myImage u regionu box
-def applyOperationOnRegion(f,myImage,box):
+#def applyOperationOnRegion(f,myImage,box,argumenti za f):
+def applyOperationOnRegion(f,myImage,box,*argv):
     try:
         region = myImage.crop(box)
-        myImage.paste(f(region),box=box)
+        if (len(argv)==0):
+            myImage.paste(f(region),box=box)
+        else:    
+            myImage.paste(f(region,argv),box=box)
         return myImage
     except Exception as e:
         print(e)
@@ -53,9 +57,9 @@ def OpenImage(url):
 def imageGrayScale(myimage):
     return myimage.convert('LA')
 #Primer pokretanja
-#myimage=Image.open("1.jpeg",mode='r')
-#myimage=applyOperationOnRegion(imageGrayScale,myimage,(40,100,200,200))
-#myimage.show()
+myimage=Image.open("1.jpeg",mode='r')
+myimage=applyOperationOnRegion(imageGrayScale,myimage,(40,100,200,200))
+myimage.show()
 #saveImage(myimage,"2.jpeg","jpeg")
 #watermark=Image.open("watermark.png",mode="r")
 #setWatermark(myimage,watermark,(0,0)).show()
