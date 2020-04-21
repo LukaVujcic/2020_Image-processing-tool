@@ -95,8 +95,10 @@ class IPC(FloatLayout):
 
     
     def on_touch_down(self,touch):
+        global im
+        print(self.area_start)
         if (self.active_tool == self.selection_tool) and (touch.osx>0.3 or touch.osy>0.3):
-            self.area_start = [(touch.osx-0.3)*(1/0.7),((touch.osy-0.15)*(1/0.85))]
+            self.area_start = [(touch.osx-0.3)*(1/0.7)*im.width,((touch.osy-0.15)*(1/0.85))*im.height]
         if self.disabled and self.collide_point(*touch.pos):
             return True
         for child in self.children[:]:
@@ -104,8 +106,9 @@ class IPC(FloatLayout):
                 return True
 
     def on_touch_up(self,touch):
+        global im
         if (self.active_tool == self.selection_tool) and (touch.osx>0.3 or touch.osy>0.3):
-            self.area_end = [(touch.osx-0.3)*(1/0.7),((touch.osy-0.15)*(1/0.85))]
+            self.area_end = [(touch.osx-0.3)*(1/0.7)*im.width,((touch.osy-0.15)*(1/0.85))*im.height]
         if self.disabled:
             return
         for child in self.children[:]:
