@@ -1,5 +1,11 @@
 from PIL import Image  
 import PIL
+#color je uredjena trojka (r,g,b)
+def generateSolidColorImage(width,height,color):
+    try:
+       return Image.new('RGB', (width,height), color)
+    except Exception as e:
+        print(e)
 #Radi custom operaciju f na slici myImage u regionu box
 #def applyOperationOnRegion(f,myImage,box,argumenti za f):
 def applyOperationOnRegion(f,myImage,box,*argv):
@@ -63,4 +69,5 @@ def imageGrayScale(myimage):
 #saveImage(myimage,"2.jpeg","jpeg")
 #watermark=Image.open("watermark.png",mode="r")
 #setWatermark(myimage,watermark,(0,0)).show()
-
+#img=generateSolidColorImage(1000,1000,(0,255,255))
+#img.show()
