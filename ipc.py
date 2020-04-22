@@ -15,7 +15,7 @@ from kivy.graphics import Color, Ellipse, Line
 from kivy.properties import ObjectProperty
 from kivy.core.window import Window
 from PIL import Image
-import imageOperations
+import imageOperations as io
 import os
 
 image_path=""
@@ -56,7 +56,6 @@ class CustomPopup(Popup):
         image_path=image_path + "tmp/" + file_name
 
         im = Image.open(image_path)
-        print(image_path)
         #IPC().reload_image() ne radi iz nekog razloga mora da se pozove iz IPC klase
         self.dismiss()
 
@@ -91,11 +90,12 @@ class IPC(FloatLayout):
     area_end = None
     active_tool = None
     
-
     def init(self):
         pass
-
     
+    def P(self):
+        return abs(self.area_start[0]-self.area_end[0]) * abs(self.area_start[1]-self.area_end[1])
+
     def on_touch_down(self,touch):
         global im
         if (self.active_tool == self.selection_tool) and (touch.osx>0.3 and touch.osy>0.3):
@@ -110,6 +110,8 @@ class IPC(FloatLayout):
         global im
         if (self.active_tool == self.selection_tool) and (touch.osx>0.3 and touch.osy>0.3):
             self.area_end = [(touch.sx-0.3)*(1/0.7)*im.width,((touch.sy-0.15)*(1/0.85))*im.height]
+            if self.P() < 50:
+                self.area_end[0],self.area_end[1],self.area_start[0],self.area_start[1] = 0,0,0,0
         if self.disabled:
             return
         for child in self.children[:]:
@@ -149,7 +151,10 @@ class IPC(FloatLayout):
         global image_path
         self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
         self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
-        i=imageOperations.applyOperationOnRegion(imageOperations.imageGrayScale,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])))
+        if self.P() < 50:
+             im=io.applyOperationOnRegion(io.imageGrayScale,im,(0,0,im.width,im.height))
+        else:
+            im=io.applyOperationOnRegion(io.imageGrayScale,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])))
         self.save_temp_image()
 
 class IPCApp(App):

@@ -63,3 +63,4 @@ def imageGrayScale(myimage):
 #saveImage(myimage,"2.jpeg","jpeg")
 #watermark=Image.open("watermark.png",mode="r")
 #setWatermark(myimage,watermark,(0,0)).show()
+
