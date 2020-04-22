@@ -17,9 +17,19 @@ from kivy.core.window import Window
 from PIL import Image
 import imageOperations as io
 import os
+import atexit
+
 
 image_path=""
-im = 0
+im = None
+
+def exit_handler():
+    global im
+    if im is not None:
+        im.close()
+        print("Image Closed!")
+    os.system("sudo umount tmp")
+    os.system("sudo rm -r tmp")
 
 class CustomPopup(Popup):
 
@@ -42,9 +52,9 @@ class CustomPopup(Popup):
             image_path=i
 
         if os.system("cd tmp")!=0:
-            os.system("mkdir -p ./tmp")
-            os.system("mount -t ramfs -o size=50m ramfs ./tmp")
-        os.system("cp " + image_path + " ./tmp/")
+            os.system("sudo mkdir -p ./tmp")
+            os.system("sudo mount -t ramfs -o size=50m ramfs ./tmp")
+        os.system("sudo cp " + image_path + " ./tmp/")
                 
         c = len(image_path)-1
         while image_path[c]!='/' and c>0:
@@ -164,4 +174,5 @@ class IPCApp(App):
 
 if __name__ == '__main__':
     Window.size = (1280, 720)
+    atexit.register(exit_handler)
     IPCApp().run()
