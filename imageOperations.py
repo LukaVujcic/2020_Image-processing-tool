@@ -57,9 +57,9 @@ def OpenImage(url):
 def imageGrayScale(myimage):
     return myimage.convert('LA')
 #Primer pokretanja
-myimage=Image.open("1.jpeg",mode='r')
-myimage=applyOperationOnRegion(imageGrayScale,myimage,(40,100,200,200))
-myimage.show()
+#myimage=Image.open("1.jpeg",mode='r')
+#myimage=applyOperationOnRegion(imageGrayScale,myimage,(40,100,200,200))
+#myimage.show()
 #saveImage(myimage,"2.jpeg","jpeg")
 #watermark=Image.open("watermark.png",mode="r")
 #setWatermark(myimage,watermark,(0,0)).show()

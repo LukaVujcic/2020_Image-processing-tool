@@ -13,11 +13,13 @@ from kivy.uix.filechooser import FileChooserListLayout
 from kivy.uix.popup import Popup
 from kivy.graphics import Color, Ellipse, Line
 from kivy.properties import ObjectProperty
+from kivy.core.window import Window
 from PIL import Image
+import imageOperations
 import os
 
 image_path=""
-im = None
+im = 0
 
 class CustomPopup(Popup):
 
@@ -96,9 +98,8 @@ class IPC(FloatLayout):
     
     def on_touch_down(self,touch):
         global im
-        print(self.area_start)
-        if (self.active_tool == self.selection_tool) and (touch.osx>0.3 or touch.osy>0.3):
-            self.area_start = [(touch.osx-0.3)*(1/0.7)*im.width,((touch.osy-0.15)*(1/0.85))*im.height]
+        if (self.active_tool == self.selection_tool) and (touch.osx>0.3 and touch.osy>0.3):
+            self.area_start = [(touch.sx-0.3)*(1/0.7)*im.width,((touch.sy-0.15)*(1/0.85))*im.height]
         if self.disabled and self.collide_point(*touch.pos):
             return True
         for child in self.children[:]:
@@ -107,8 +108,8 @@ class IPC(FloatLayout):
 
     def on_touch_up(self,touch):
         global im
-        if (self.active_tool == self.selection_tool) and (touch.osx>0.3 or touch.osy>0.3):
-            self.area_end = [(touch.osx-0.3)*(1/0.7)*im.width,((touch.osy-0.15)*(1/0.85))*im.height]
+        if (self.active_tool == self.selection_tool) and (touch.osx>0.3 and touch.osy>0.3):
+            self.area_end = [(touch.sx-0.3)*(1/0.7)*im.width,((touch.sy-0.15)*(1/0.85))*im.height]
         if self.disabled:
             return
         for child in self.children[:]:
@@ -133,6 +134,7 @@ class IPC(FloatLayout):
             if ext=='BMP' or ext=='JPEG' or ext=='PNG':
                 image=im.convert('RGB')
                 image.save(url,ext)
+                self.reload_image()
                 pass
         except ValueError:
             print('ValueError')
@@ -142,6 +144,13 @@ class IPC(FloatLayout):
     def activate_selection_tool(self):
         self.active_tool=self.selection_tool
 
+    def greyscale_image(self):
+        global im
+        global image_path
+        self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
+        self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
+        i=imageOperations.applyOperationOnRegion(imageOperations.imageGrayScale,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])))
+        self.save_temp_image()
 
 class IPCApp(App):
     
@@ -149,4 +158,5 @@ class IPCApp(App):
         return IPC()
 
 if __name__ == '__main__':
+    Window.size = (1280, 720)
     IPCApp().run()
