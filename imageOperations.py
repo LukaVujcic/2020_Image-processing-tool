@@ -1,6 +1,16 @@
 from PIL import Image  
 import PIL
-#color je uredjena trojka (r,g,b)
+#box1 je uredjena cetvorka (left, top, right, bottom) tj gornji levi cosak je (left,top) a donji desni (right,bottom)-ovim su zadate pozicije regiona koji zelimo da kopiramo
+#box2 je uredjena dvojka (x coordinate in upper left, y coordinate in upper left) zadaje gde se na slici lepi gornji levi cosak regiona
+def copyOneRegionToAnother(img,box1,box2):
+    try:
+        region = img.crop(box1)
+        newImage=img.copy()
+        newImage.paste(region,box2)
+        return newImage
+    except Exception as e:
+        print(e)
+#color je uredjena trojka (r,g,b)-cela slika ce biti te boje
 def generateSolidColorImage(width,height,color):
     try:
        return Image.new('RGB', (width,height), color)
@@ -11,11 +21,12 @@ def generateSolidColorImage(width,height,color):
 def applyOperationOnRegion(f,myImage,box,*argv):
     try:
         region = myImage.crop(box)
+        newImage=myImage.copy() #Pravimo novu sliku da ne bi original promenili
         if (len(argv)==0):
-            myImage.paste(f(region),box=box)
+            newImage.paste(f(region),box=box)
         else:    
-            myImage.paste(f(region,argv),box=box)
-        return myImage
+            newImage.paste(f(region,argv),box=box)
+        return newImage
     except Exception as e:
         print(e)
 
@@ -33,7 +44,7 @@ def saveImage(myImage,url,ext):
 #Postavlja watermark na sliku
 def setWatermark(imageSource,imageWatermark,position):
     try:
-        if imageWatermark.format.upper()=='PNG':
+        if imageWatermark.format.upper()=='PNG': #Watermark podrzava samo PNG slike
             width, height = imageSource.size
             transparent = Image.new('RGBA', (width, height), (0,0,0,0))
             transparent.paste(imageSource, (0,0))
@@ -63,7 +74,9 @@ def OpenImage(url):
 def imageGrayScale(myimage):
     return myimage.convert('LA')
 #Primer pokretanja
-#myimage=Image.open("1.jpeg",mode='r')
+#myimage=Image.open("1.jpeg")
+#myimage.show()
+#copyOneRegionToAnother(myimage,(0,0,100,50),(200,50)).show()
 #myimage=applyOperationOnRegion(imageGrayScale,myimage,(40,100,200,200))
 #myimage.show()
 #saveImage(myimage,"2.jpeg","jpeg")
