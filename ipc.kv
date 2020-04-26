@@ -5,7 +5,20 @@
     resize_tool:resize_tool
     crop_tool:crop_tool
     laso_tool:laso_tool
+    text_tool:text_tool
+    contour_tool:contour_tool
+    find_edges_tool:find_edges_tool
+    sharpen_tool:sharpen_tool
+    smooth_tool:smooth_tool
+    blur_tool:blur_tool
+    guassian_blur_tool:guassian_blur_tool
+    unsharp_tool:unsharp_tool
+    mode_filter_tool:mode_filter_tool
+
     img_id:img_id
+    lbl1:lbl1
+    lbl2:lbl2
+    lbl3:lbl3
 
     GridLayout:
         cols:4
@@ -29,7 +42,7 @@
     
     GridLayout:
         cols: 4
-        size_hint: 0.3,0.3
+        size_hint: 0.175,0.3
         pos_hint:{"x":0,"top":0.9}
         Button:
             id:selection_tool
@@ -67,6 +80,44 @@
             background_normal: "./assets/SelectionLasso-Icon.png"
             border:0,0,0,0
 
+        Button:
+            id:contour_tool
+            background_normal: "./assets/SelectionRectangle-Icon.png"
+            border:0,0,0,0
+            on_release:root.filter_image_countour()
+        Button:
+            id:find_edges_tool
+            background_normal: "./assets/TransformScale-Icon.png"
+            border:0,0,0,0
+            on_release:root.filter_image_find_edges()
+        Button:
+            id:sharpen_tool
+            background_normal: "./assets/SelectionScissors-Icon.png"
+            border:0,0,0,0
+            on_release:root.filter_image_sharpen()
+        Button:
+            id:smooth_tool
+            background_normal: "./assets/TextTool-Icon.png"
+            border:0,0,0,0
+            on_release:root.filter_image_smooth()
+
+        Button:
+            id:blur_tool
+            background_normal: "./assets/BrushPencil-Icon.png"
+            border:0,0,0,0
+        Button:
+            id:guassian_blur_tool
+            background_normal: "./assets/BrushPaintbrush-Icon.png"
+            border:0,0,0,0
+        Button:
+            id:unsharp_tool
+            background_normal: "./assets/Eraser-Icon.png"
+            border:0,0,0,0
+        Button:
+            id:mode_filter_tool
+            background_normal: "./assets/SelectionLasso-Icon.png"
+            border:0,0,0,0
+
 
     Image:
         id:img_id
@@ -75,6 +126,7 @@
         #source: "1.jpeg"
 
     ColorPicker:
+        id:cp
         color:0,0,0,1
         size_hint:0.3,0.4
         pos_hint: {"left":1,"bot":1}
@@ -83,8 +135,9 @@
         size_hint:0.3,0.1
         pos_hint: {"x":0,"top":0.5}
         Label:
+            id:lbl3
             pos_hint: {"x":-0.4,"top":1}
-            text:"label2"
+            text:"Property3"
             color:1,1,1,1
         Slider:
             pos_hint: {"right":1,"top":1}
@@ -96,8 +149,23 @@
         size_hint:0.3,0.1
         pos_hint: {"x":0,"top":0.55}
         Label:
+            id:lbl2
             pos_hint: {"x":-0.4,"top":1}
-            text:"label1"
+            text:"Property 2"
+            color:1,1,1,1
+        Slider:
+            pos_hint: {"right":1,"top":1}
+            size_hint:0.75,1
+            min:0
+            max:100
+
+    FloatLayout:
+        size_hint:0.3,0.1
+        pos_hint: {"x":0,"top":0.6}
+        Label:
+            id:lbl1
+            pos_hint: {"x":-0.4,"top":1}
+            text:"Property 1"
             color:1,1,1,1
         Slider:
             pos_hint: {"right":1,"top":1}

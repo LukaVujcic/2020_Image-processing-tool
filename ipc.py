@@ -14,7 +14,7 @@ from kivy.uix.popup import Popup
 from kivy.graphics import Color, Ellipse, Line
 from kivy.properties import ObjectProperty
 from kivy.core.window import Window
-from PIL import Image
+from PIL import Image, ImageFilter ,ImageFont, ImageDraw
 import imageOperations as io
 import os
 import atexit
@@ -94,10 +94,22 @@ class IPC(FloatLayout):
     crop_tool = ObjectProperty(None)
     laso_tool = ObjectProperty(None)
     save_file_popup = ObjectProperty(None)
+    text_tool = ObjectProperty(None)
+    contour_tool = ObjectProperty(None)
+    find_edges_tool = ObjectProperty(None)
+    sharpen_tool = ObjectProperty(None)
+    smooth_tool = ObjectProperty(None)
+    blur_tool = ObjectProperty(None)
+    guassian_tool = ObjectProperty(None)
+    unsharp_tool = ObjectProperty(None)
+    mode_filter_tool = ObjectProperty(None)
+    lbl1 = ObjectProperty(None)
+    lbl2 = ObjectProperty(None)
+    lbl3 = ObjectProperty(None)
     img_id = ObjectProperty(None)
     current_path="./"
-    area_start = None
-    area_end = None
+    area_start = [0,0]
+    area_end = [0,0]
     active_tool = None
     
     def init(self):
@@ -105,6 +117,13 @@ class IPC(FloatLayout):
     
     def P(self):
         return abs(self.area_start[0]-self.area_end[0]) * abs(self.area_start[1]-self.area_end[1])
+
+    def key_action(self,*args):
+        if args[0]==122 and args[3]==['ctrl']:
+            #undo
+            pass
+        
+    Window.bind(on_key_down=key_action)
 
     def on_touch_down(self,touch):
         global im
@@ -127,7 +146,7 @@ class IPC(FloatLayout):
         for child in self.children[:]:
             if child.dispatch('on_touch_up', touch):
                 return True
-    
+        
     def reload_image(self):
         global image_path
         self.img_id.source=image_path
@@ -165,6 +184,26 @@ class IPC(FloatLayout):
              im=io.applyOperationOnRegion(io.imageGrayScale,im,(0,0,im.width,im.height))
         else:
             im=io.applyOperationOnRegion(io.imageGrayScale,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])))
+        self.save_temp_image()
+    
+    def filter_image_countour(self):
+        global im
+        im=im.filter(ImageFilter.CONTOUR)
+        self.save_temp_image()
+    
+    def filter_image_find_edges(self):
+        global im
+        im=im.filter(ImageFilter.FIND_EDGES)
+        self.save_temp_image()
+
+    def filter_image_sharpen(self):
+        global im
+        im=im.filter(ImageFilter.SHARPEN)
+        self.save_temp_image()
+
+    def filter_image_smooth(self):
+        global im
+        im=im.filter(ImageFilter.SMOOTH)
         self.save_temp_image()
 
 class IPCApp(App):
