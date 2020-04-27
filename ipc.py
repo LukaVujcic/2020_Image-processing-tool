@@ -228,13 +228,45 @@ class IPC(FloatLayout):
     def filter_image_blur(self):
         global im
         self.make_backup()
-        self.lbl3.text="Strength: "
-        self.slider3.min=1
-        self.slider3.max=20
+        self.lbl1.text="Strength: "
+        self.slider1.min=1
+        self.slider1.max=20
         if self.P() < 50:
-             im=io.applyOperationOnRegion(io.imageBlur,im,(0,0,im.width,im.height),self.slider3.value)
+             im=io.applyOperationOnRegion(io.imageBlur,im,(0,0,im.width,im.height),self.slider1.value)
         else:
-            im=io.applyOperationOnRegion(io.imageBlur,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),self.slider3.value)
+            im=io.applyOperationOnRegion(io.imageBlur,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),self.slider1.value)
+        self.save_temp_image()
+
+    def filter_image_unsharp(self):
+        global im
+        self.make_backup()
+        self.lbl1.text="Radius: "
+        self.lbl2.text="Percent: "
+        self.lbl3.text="Threshold: "
+        self.slider1.min = 1
+        self.slider1.max = 30
+        self.slider2.min = 0
+        self.slider2.max = 500
+        self.slider3.min = 0
+        self.slider3.max = 15
+        im=im.filter(ImageFilter.UnsharpMask(int(self.slider1.value),int(self.slider2.value),int(self.slider3.value)))
+        self.save_temp_image()
+
+    def filter_image_mode(self):
+        global im
+        self.make_backup()
+        self.slider1.min=1
+        self.slider1.max=20
+        self.lbl1.text="Strength: "
+        im=im.filter(ImageFilter.ModeFilter(int(self.slider1.value)))
+        self.save_temp_image()
+
+    def draw_text(self):
+        global im
+        self.make_backup()
+        draw = ImageDraw.Draw(im)
+        font = ImageFont.truetype("./assets/freefont/FreeMono.ttf", 72)
+        draw.text((10, 25), "world",fill=(0,0,0), font=font)
         self.save_temp_image()
 
 class IPCApp(App):

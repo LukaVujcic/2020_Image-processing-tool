@@ -65,6 +65,7 @@
             id: text_tool
             background_normal: "./assets/TextTool-Icon.png"
             border:0,0,0,0
+            on_release:root.draw_text()
 
         Button:
             id:pen_tool
@@ -117,11 +118,13 @@
         Button:
             id:unsharp_tool
             background_normal: "./assets/Eraser-Icon.png"
-            border:0,0,0,0
+            border:0,0,0,0 
+            on_release:root.filter_image_unsharp()
         Button:
             id:mode_filter_tool
             background_normal: "./assets/SelectionLasso-Icon.png"
             border:0,0,0,0
+            on_release:root.filter_image_mode()
 
 
     Image:
