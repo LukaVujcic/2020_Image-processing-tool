@@ -231,10 +231,12 @@ class IPC(FloatLayout):
         self.lbl1.text="Strength: "
         self.slider1.min=1
         self.slider1.max=20
+        self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
+        self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
         if self.P() < 50:
-             im=io.applyOperationOnRegion(io.imageBlur,im,(0,0,im.width,im.height),self.slider1.value)
+             im=io.applyOperationOnRegion(io.imageBlur,im,(0,0,im.width,im.height),int(self.slider1.value))
         else:
-            im=io.applyOperationOnRegion(io.imageBlur,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),self.slider1.value)
+            im=io.applyOperationOnRegion(io.imageBlur,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),int(self.slider1.value))
         self.save_temp_image()
 
     def filter_image_unsharp(self):
