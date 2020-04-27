@@ -19,6 +19,9 @@
     lbl1:lbl1
     lbl2:lbl2
     lbl3:lbl3
+    slider1:slider1
+    slider2:slider2
+    slider3:slider3
 
     GridLayout:
         cols:4
@@ -37,7 +40,8 @@
             on_release: root.reload_image()
         Button:
             id:image
-            text: "Export"
+            text: "Undo"
+            on_release: root.key_action()
 
     
     GridLayout:
@@ -105,6 +109,7 @@
             id:blur_tool
             background_normal: "./assets/BrushPencil-Icon.png"
             border:0,0,0,0
+            on_release:root.filter_image_blur()
         Button:
             id:guassian_blur_tool
             background_normal: "./assets/BrushPaintbrush-Icon.png"
@@ -137,13 +142,15 @@
         Label:
             id:lbl3
             pos_hint: {"x":-0.4,"top":1}
-            text:"Property3"
+            text:"Property 3"
             color:1,1,1,1
         Slider:
+            id:slider3
             pos_hint: {"right":1,"top":1}
             size_hint:0.75,1
             min:0
             max:100
+            on_touch_move:root.update_labels()
 
     FloatLayout:
         size_hint:0.3,0.1
@@ -154,10 +161,12 @@
             text:"Property 2"
             color:1,1,1,1
         Slider:
+            id:slider2
             pos_hint: {"right":1,"top":1}
             size_hint:0.75,1
             min:0
             max:100
+            on_touch_move:root.update_labels()
 
     FloatLayout:
         size_hint:0.3,0.1
@@ -168,10 +177,12 @@
             text:"Property 1"
             color:1,1,1,1
         Slider:
+            id:slider1
             pos_hint: {"right":1,"top":1}
             size_hint:0.75,1
             min:0
             max:100
+            on_touch_move:root.update_labels()
 
 
 <CustomPopup>:

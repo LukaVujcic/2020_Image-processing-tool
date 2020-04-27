@@ -22,6 +22,7 @@ import atexit
 
 image_path=""
 im = None
+old = None
 
 def exit_handler():
     global im
@@ -106,6 +107,9 @@ class IPC(FloatLayout):
     lbl1 = ObjectProperty(None)
     lbl2 = ObjectProperty(None)
     lbl3 = ObjectProperty(None)
+    slider1 = ObjectProperty(None)
+    slider2 = ObjectProperty(None)
+    slider3 = ObjectProperty(None)
     img_id = ObjectProperty(None)
     current_path="./"
     area_start = [0,0]
@@ -118,12 +122,23 @@ class IPC(FloatLayout):
     def P(self):
         return abs(self.area_start[0]-self.area_end[0]) * abs(self.area_start[1]-self.area_end[1])
 
+    def make_backup(self):
+        global old
+        old=im.copy()
+
     def key_action(self,*args):
-        if args[0]==122 and args[3]==['ctrl']:
-            #undo
-            pass
+        #if args[0]==122 and args[3]==['ctrl']:
+        global old
+        global im
+        im=old
+        self.save_temp_image()
         
-    Window.bind(on_key_down=key_action)
+    #Window.bind(on_key_down=key_action)
+
+    def update_labels(self):
+        self.lbl1.text = self.lbl1.text[:self.lbl1.text.index(" ")] + " " + str(int(self.slider1.value))
+        self.lbl2.text = self.lbl2.text[:self.lbl2.text.index(" ")] + " " + str(int(self.slider2.value))
+        self.lbl3.text = self.lbl3.text[:self.lbl3.text.index(" ")] + " " + str(int(self.slider3.value))
 
     def on_touch_down(self,touch):
         global im
@@ -177,7 +192,7 @@ class IPC(FloatLayout):
 
     def greyscale_image(self):
         global im
-        global image_path
+        self.make_backup()
         self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
         self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
         if self.P() < 50:
@@ -188,22 +203,38 @@ class IPC(FloatLayout):
     
     def filter_image_countour(self):
         global im
+        self.make_backup()
         im=im.filter(ImageFilter.CONTOUR)
         self.save_temp_image()
     
     def filter_image_find_edges(self):
         global im
+        self.make_backup()
         im=im.filter(ImageFilter.FIND_EDGES)
         self.save_temp_image()
 
     def filter_image_sharpen(self):
         global im
+        self.make_backup()
         im=im.filter(ImageFilter.SHARPEN)
         self.save_temp_image()
 
     def filter_image_smooth(self):
         global im
+        self.make_backup()
         im=im.filter(ImageFilter.SMOOTH)
+        self.save_temp_image()
+    
+    def filter_image_blur(self):
+        global im
+        self.make_backup()
+        self.lbl3.text="Strength: "
+        self.slider3.min=1
+        self.slider3.max=20
+        if self.P() < 50:
+             im=io.applyOperationOnRegion(io.imageBlur,im,(0,0,im.width,im.height),self.slider3.value)
+        else:
+            im=io.applyOperationOnRegion(io.imageBlur,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),self.slider3.value)
         self.save_temp_image()
 
 class IPCApp(App):
