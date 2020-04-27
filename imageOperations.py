@@ -1,5 +1,4 @@
-from PIL import Image  
-import PIL
+from PIL import Image,ImageFilter 
 #box1 je uredjena cetvorka (left, top, right, bottom) tj gornji levi cosak je (left,top) a donji desni (right,bottom)-ovim su zadate pozicije regiona koji zelimo da kopiramo
 #box2 je uredjena dvojka (x coordinate in upper left, y coordinate in upper left) zadaje gde se na slici lepi gornji levi cosak regiona
 def copyOneRegionToAnother(img,box1,box2):
@@ -23,9 +22,10 @@ def applyOperationOnRegion(f,myImage,box,*argv):
         region = myImage.crop(box)
         newImage=myImage.copy() #Pravimo novu sliku da ne bi original promenili
         if (len(argv)==0):
-            newImage.paste(f(region),box=box)
+            newImage.paste(f(region),box=(box[0],box[1]))
         else:    
-            newImage.paste(f(region,argv),box=box)
+           # newImage.show()
+            newImage.paste(f(region,argv),box=(box[0],box[1]))
         return newImage
     except Exception as e:
         print(e)
@@ -56,28 +56,28 @@ def setWatermark(imageSource,imageWatermark,position):
     except Exception as e:
         print(e)
 
-#Otvara sliku sa date url adrese i vraca pillow objekat Image
-#Open IMAGE fja vec postoji
-'''
-def OpenImage(url):
-    try:
-        myImage=Image.open(url,mode='r')
-        return myImage
-    except ValueError:
-        print('ValueError')
-    except FileNotFoundError:
-        print('Image not found')
-    except PIL.UnidentifiedImageError:
-        print('Image cannot be opened and identified')
-'''
 #Pretvara sliku u crno belu
 def imageGrayScale(myimage):
     return myimage.convert('LA')
+#Bluruje sliku
+#def imageBlur(myImage,CoefBlur):
+def imageBlur(myImage,args):
+    try:
+        CoefBlur=args[0]
+        blurred_image = myImage.filter(ImageFilter.GaussianBlur(CoefBlur))
+        return blurred_image
+    except Exception as e:
+        print (e)
+    
 #Primer pokretanja
 #myimage=Image.open("1.jpeg")
 #myimage.show()
+
+#blurred_image = applyOperationOnRegion(imageBlur,myimage,(50,50,250,250),5)
+#blurred_image.show()
+
 #copyOneRegionToAnother(myimage,(0,0,100,50),(200,50)).show()
-#myimage=applyOperationOnRegion(imageGrayScale,myimage,(40,100,200,200))
+#myimage=applyOperationOnRegion(imageGrayScale,blurred_image,(270,100,380,250))
 #myimage.show()
 #saveImage(myimage,"2.jpeg","jpeg")
 #watermark=Image.open("watermark.png",mode="r")
