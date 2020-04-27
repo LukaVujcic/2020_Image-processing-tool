@@ -94,9 +94,25 @@ def imagePixelate(myImage,args):
         return result
     except Exception as e:
         print(e)
+#Na osnovu slike broja in_column i in_row generise matricu slika od date slike, ako su new_width i new_height specifikovani dobija se specifikovana slika inace proslediti None za oba
+def generateGridFromImage(myImage,in_column,in_row,new_width,new_height):
+    try:
+        w,h=myImage.size
+        new_image=generateSolidColorImage(w*in_row,h*in_column,(255,255,255))
+        #new_image.show()
+        for j in range(0,in_column):
+            for i in range(0,in_row):
+                new_image.paste(myimage,(i*w,j*h))
+        if new_height!=None and new_width!=None:
+            new_image=new_image.resize((new_width,new_height))
+        return new_image
+    except Exception as e:
+        print(e)
 #Primer pokretanja
 #Otvorene slike treba zatvoriti metodom close
 #myimage=Image.open("1.jpeg")
+#myimage=generateGridFromImage(myimage,4,3,None,None)
+#myimage.show()
 #myimage=applyOperationOnRegion(imagePixelate,myimage,(50,50,250,250),50)
 #myimage=imagePixelate(myimage,50,30)
 #myimage.show()
