@@ -1,4 +1,8 @@
-from PIL import Image,ImageFilter 
+from PIL import Image,ImageFilter,ImageEnhance
+
+#Napomena
+#Funkcije koje pocinju sa prefiksom image moguce je proslediti funkciji applyOperationOnRegion
+
 #box1 je uredjena cetvorka (left, top, right, bottom) tj gornji levi cosak je (left,top) a donji desni (right,bottom)-ovim su zadate pozicije regiona koji zelimo da kopiramo
 #box2 je uredjena dvojka (x coordinate in upper left, y coordinate in upper left) zadaje gde se na slici lepi gornji levi cosak regiona
 def copyOneRegionToAnother(img,box1,box2):
@@ -9,7 +13,7 @@ def copyOneRegionToAnother(img,box1,box2):
         return newImage
     except Exception as e:
         print(e)
-#color je uredjena trojka (r,g,b)-cela slika ce biti te boje
+#color je uredjena trojka (r,g,b)-generisace sliku te boje
 def generateSolidColorImage(width,height,color):
     try:
        return Image.new('RGB', (width,height), color)
@@ -58,7 +62,10 @@ def setWatermark(imageSource,imageWatermark,position):
 
 #Pretvara sliku u crno belu
 def imageGrayScale(myimage):
-    return myimage.convert('LA')
+    try:
+        return myimage.convert('LA')
+    except Exception as e:
+        print(e)
 #Bluruje sliku
 #def imageBlur(myImage,CoefBlur):
 def imageBlur(myImage,args):
@@ -68,14 +75,24 @@ def imageBlur(myImage,args):
         return blurred_image
     except Exception as e:
         print (e)
-    
+#def imageBrightess(myImage,factor), za factor=1 nema promene, za factor>1 posvetljenje, za factor<1 zatamljenje
+def imageBrightess(myImage,args):
+    try:
+        factor=args[0]
+        enhancer = ImageEnhance.Brightness(myImage)
+        new_image=enhancer.enhance(factor)
+        return new_image
+    except Exception as e:
+        print(e)
+
 #Primer pokretanja
+#Otvorene slike treba zatvoriti metodom close
 #myimage=Image.open("1.jpeg")
 #myimage.show()
-
+#myimage=applyOperationOnRegion(imageBrightess,myimage,(50,50,250,250),1.5)
+#myimage.show()
 #blurred_image = applyOperationOnRegion(imageBlur,myimage,(50,50,250,250),5)
 #blurred_image.show()
-
 #copyOneRegionToAnother(myimage,(0,0,100,50),(200,50)).show()
 #myimage=applyOperationOnRegion(imageGrayScale,blurred_image,(270,100,380,250))
 #myimage.show()
@@ -84,3 +101,4 @@ def imageBlur(myImage,args):
 #setWatermark(myimage,watermark,(0,0)).show()
 #img=generateSolidColorImage(1000,1000,(0,255,255))
 #img.show()
+#myimage.close()
