@@ -84,10 +84,21 @@ def imageBrightess(myImage,args):
         return new_image
     except Exception as e:
         print(e)
-
+#def imagePixelate(myImage,coefPix) coefPix koeficijent pikselizacije odredjuje koliko je slika pikselizovana manji koef-veca pikselizacija
+def imagePixelate(myImage,args):
+    try:
+        coefPix=args[0]
+        h,w=myImage.size
+        imgSmall = myImage.resize((coefPix,coefPix),resample=Image.BILINEAR)
+        result = imgSmall.resize(myImage.size,Image.NEAREST)
+        return result
+    except Exception as e:
+        print(e)
 #Primer pokretanja
 #Otvorene slike treba zatvoriti metodom close
 #myimage=Image.open("1.jpeg")
+#myimage=applyOperationOnRegion(imagePixelate,myimage,(50,50,250,250),50)
+#myimage=imagePixelate(myimage,50,30)
 #myimage.show()
 #myimage=applyOperationOnRegion(imageBrightess,myimage,(50,50,250,250),1.5)
 #myimage.show()
