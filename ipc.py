@@ -117,6 +117,7 @@ class IPC(FloatLayout):
     current_path="./"
     area_start = [0,0]
     area_end = [0,0]
+    tmp_box = (0,0,0,0)
     image_begin = [0.3,0.15]
     image_end = [1,0.8]
     active_tool = None
@@ -127,8 +128,13 @@ class IPC(FloatLayout):
         self._keyboard = None
 
     def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
-        if len(modifiers)>0 and modifiers[0] == 'ctrl' and keycode[1] == 'z':
-            self.undo()
+        if len(modifiers)>0 and modifiers[0] == 'ctrl':
+            if keycode[1] == 'z':
+                self.undo()
+            if keycode[1] == 'c':
+                self.copy()
+            if keycode[1] == 'v':
+                self.paste()
         
         #if keycode[1]=='enter':
 
@@ -336,6 +342,60 @@ class IPC(FloatLayout):
         s=input()
         draw.text((self.area_start[0], self.area_start[1]), s,fill=(int(self.cp.color[0]),int(self.cp.color[1]),int(self.cp.color[2])), font=font)
         self.save_temp_image()
+
+    def copy(self):
+        self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
+        self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
+        self.tmp_box = (int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1]))
+        print(self.tmp_box)
+    
+    def paste(self):
+        global im
+        self.make_backup()
+        self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
+        self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
+        im=io.copyOneRegionToAnother(im,self.tmp_box,(int(self.area_start[0]),int(self.area_start[1])))
+        self.save_temp_image()
+
+    def set_image_brightness(self):
+        global im
+        self.make_backup()
+        self.lbl1.text="Strength: "
+        self.slider1.min=-20
+        self.slider1.max=20
+        self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
+        self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
+        if self.P() < 50:
+            im=io.applyOperationOnRegion(io.imageBrightness,im,(0,0,im.width,im.height),int(self.slider1.value),self.slider1.value)
+        else:
+            im=io.applyOperationOnRegion(io.imageBrightness,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),int(self.slider1.value),seld.slider1.value)
+        self.save_temp_image()
+
+    def pixelate_image(self):
+        global im
+        self.make_backup()
+        self.lbl1.text="Strength: "
+        self.slider1.min=1
+        self.slider1.max=20
+        self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
+        self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
+        if self.P() < 50:
+            im=io.applyOperationOnRegion(io.imagePixelate,im,(0,0,im.width,im.height),int(self.slider1.value))
+        else:
+            im=io.applyOperationOnRegion(io.imagePixelate,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),int(self.slider1.value))
+        self.save_temp_image()
+
+    def make_grid(self): #TODO
+        global im
+        self.make_backup()
+        self.lbl1.text="Strength: "
+        self.slider1.min=1
+        self.slider1.max=20
+        self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
+        self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
+        im=io.applyOperationOnRegion(io.imageBlur,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),int(self.slider1.value))
+        self.save_temp_image()
+
 
 class IPCApp(App):
     

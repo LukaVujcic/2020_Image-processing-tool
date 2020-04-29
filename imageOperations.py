@@ -76,7 +76,7 @@ def imageBlur(myImage,args):
     except Exception as e:
         print (e)
 #def imageBrightess(myImage,factor), za factor=1 nema promene, za factor>1 posvetljenje, za factor<1 zatamljenje
-def imageBrightess(myImage,args):
+def imageBrightness(myImage,args):
     try:
         factor=args[0]
         enhancer = ImageEnhance.Brightness(myImage)

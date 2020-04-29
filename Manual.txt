@@ -1,0 +1,29 @@
+0 1 X 2
+3 X X X
+4 5 6 7
+8 9 10 11
+
+Dosta efekata zavisi od Slidera Strength i nece se videti ako se ne podesi vrednost
+                ovo ukljucuje i Text
+0 - Area Select - MORA se selektovati barem mala zona, ne moze samo click u mestu inace zona 
+                postaje koord pocetak
+1 - Calibraion - NEOPHODNO ukoliko je slika drugacijeg formata od ~ 16/9 -> 
+                kliknuti levim klikom u donji desni ugao slike i previci do gorenjeg desnog,
+                nije neophodno ubosti u pixel moze i "ugrubo"
+2 - Text - za sada se text mora uneti u terminal
+3 - Greyscale
+4 - Contour
+5 - FindEgdes
+6 - Sharpen
+7 - Smooth
+8 - Blur
+9 - Unsharp
+10 - Min - Vremenski Zahtevno
+11 - Mode - Vremenski Zahtevno
+
+Nakon otvaranja slike potrebno je pritisnuti Reload
+Undo radi SAMO jedan korak unazad
+
+ctrl+z -Undo
+ctrl+c -Copy
+ctrl+v -Paste
