@@ -23,8 +23,7 @@ import atexit
 
 image_path="./assets/white.jpeg"
 im = Image.open("./assets/white.jpeg")
-old = None
-input=""
+old = []
 
 def exit_handler():
     global im
@@ -152,14 +151,18 @@ class IPC(FloatLayout):
 
     def make_backup(self):
         global old
-        old=im.copy()
+        old.append(im.copy())
+        if len(old)>10:
+            old.pop(0)
 
     def undo(self,*args):
         #if args[0]==122 and args[3]==['ctrl']:
         global old
         global im
-        im=old
-        self.save_temp_image()
+        if len(old)>=1:
+            im=old[-1]
+            old.pop(-1)
+            self.save_temp_image()
         
     #Window.bind(on_key_down=key_action)
 
