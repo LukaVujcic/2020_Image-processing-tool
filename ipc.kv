@@ -11,9 +11,10 @@
     sharpen_tool:sharpen_tool
     smooth_tool:smooth_tool
     blur_tool:blur_tool
-    guassian_blur_tool:guassian_blur_tool
     unsharp_tool:unsharp_tool
     mode_filter_tool:mode_filter_tool
+    min_filter_tool:min_filter_tool
+    cp:cp
 
     img_id:img_id
     lbl1:lbl1
@@ -41,7 +42,7 @@
         Button:
             id:image
             text: "Undo"
-            on_release: root.key_action()
+            on_release: root.undo()
 
     
     GridLayout:
@@ -57,6 +58,7 @@
             id:resize_tool
             background_normal: "./assets/TransformScale-Icon.png"
             border:0,0,0,0
+            on_release:root.activate_calibration_tool()
         Button:
             id:crop_tool
             background_normal: "./assets/SelectionScissors-Icon.png"
@@ -112,14 +114,15 @@
             border:0,0,0,0
             on_release:root.filter_image_blur()
         Button:
-            id:guassian_blur_tool
+            id:unsharp_tool
             background_normal: "./assets/BrushPaintbrush-Icon.png"
             border:0,0,0,0
-        Button:
-            id:unsharp_tool
-            background_normal: "./assets/Eraser-Icon.png"
-            border:0,0,0,0 
             on_release:root.filter_image_unsharp()
+        Button:
+            id:min_filter_tool
+            background_normal: "./assets/Eraser-Icon.png"
+            border:0,0,0,0
+            on_release:root.filter_image_min()
         Button:
             id:mode_filter_tool
             background_normal: "./assets/SelectionLasso-Icon.png"

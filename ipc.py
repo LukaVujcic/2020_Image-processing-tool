@@ -11,6 +11,7 @@ from kivy.uix.colorpicker import ColorPicker
 from kivy.uix.popup import Popup
 from kivy.uix.filechooser import FileChooserListLayout
 from kivy.uix.popup import Popup
+from kivy.uix.textinput import TextInput
 from kivy.graphics import Color, Ellipse, Line
 from kivy.properties import ObjectProperty
 from kivy.core.window import Window
@@ -20,9 +21,10 @@ import os
 import atexit
 
 
-image_path=""
-im = None
+image_path="./assets/white.jpeg"
+im = Image.open("./assets/white.jpeg")
 old = None
+input=""
 
 def exit_handler():
     global im
@@ -101,9 +103,10 @@ class IPC(FloatLayout):
     sharpen_tool = ObjectProperty(None)
     smooth_tool = ObjectProperty(None)
     blur_tool = ObjectProperty(None)
-    guassian_tool = ObjectProperty(None)
     unsharp_tool = ObjectProperty(None)
     mode_filter_tool = ObjectProperty(None)
+    min_filter_tool = ObjectProperty(None)
+    cp = ObjectProperty(None)
     lbl1 = ObjectProperty(None)
     lbl2 = ObjectProperty(None)
     lbl3 = ObjectProperty(None)
@@ -114,10 +117,29 @@ class IPC(FloatLayout):
     current_path="./"
     area_start = [0,0]
     area_end = [0,0]
+    image_begin = [0.3,0.15]
+    image_end = [1,0.8]
     active_tool = None
+    calibration_tool = 1
+
+    def _keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self._on_keyboard_down)
+        self._keyboard = None
+
+    def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
+        if len(modifiers)>0 and modifiers[0] == 'ctrl' and keycode[1] == 'z':
+            self.undo()
+        
+        #if keycode[1]=='enter':
+
+        #global input
+        #input = input + keycode[1]
+        #print(keycode[1])
+
     
     def init(self):
-        pass
+        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+        self._keyboard.bind(on_key_down=self._on_keyboard_down)
     
     def P(self):
         return abs(self.area_start[0]-self.area_end[0]) * abs(self.area_start[1]-self.area_end[1])
@@ -126,7 +148,7 @@ class IPC(FloatLayout):
         global old
         old=im.copy()
 
-    def key_action(self,*args):
+    def undo(self,*args):
         #if args[0]==122 and args[3]==['ctrl']:
         global old
         global im
@@ -135,6 +157,17 @@ class IPC(FloatLayout):
         
     #Window.bind(on_key_down=key_action)
 
+    def adjust_selection(self):
+        global im
+        if self.area_start[0]<0:
+            self.area_start[0]=0
+        if self.area_start[1]<0:
+            self.area_start[1]=0
+        if self.area_end[0]>im.width:
+            self.area_end[0]=im.width
+        if self.area_end[1]>im.height:
+            self.area_end[1]=im.height
+
     def update_labels(self):
         self.lbl1.text = self.lbl1.text[:self.lbl1.text.index(" ")] + " " + str(int(self.slider1.value))
         self.lbl2.text = self.lbl2.text[:self.lbl2.text.index(" ")] + " " + str(int(self.slider2.value))
@@ -142,8 +175,14 @@ class IPC(FloatLayout):
 
     def on_touch_down(self,touch):
         global im
-        if (self.active_tool == self.selection_tool) and (touch.osx>0.3 and touch.osy>0.3):
-            self.area_start = [(touch.sx-0.3)*(1/0.7)*im.width,((touch.sy-0.15)*(1/0.85))*im.height]
+        if (self.active_tool == self.selection_tool) and (touch.osx>0.3 and touch.osy<0.95):
+            self.area_start = [1-(touch.osx-self.image_begin[0])*(1/(self.image_begin[0]-self.image_end[0]))*im.width,-((touch.osy-self.image_end[1])*(1/(self.image_end[1]-self.image_begin[1]))*im.height)]
+            #print(self.area_start[0]/im.width,self.area_start[1]/im.height)
+            self.adjust_selection()
+            print(self.area_start)
+        if (self.active_tool == self.calibration_tool) and (touch.osx>0.25 and touch.osy<0.95):
+            self.image_begin[0],self.image_begin[1] = touch.osx,touch.osy
+            print(self.image_begin)
         if self.disabled and self.collide_point(*touch.pos):
             return True
         for child in self.children[:]:
@@ -152,10 +191,16 @@ class IPC(FloatLayout):
 
     def on_touch_up(self,touch):
         global im
-        if (self.active_tool == self.selection_tool) and (touch.osx>0.3 and touch.osy>0.3):
-            self.area_end = [(touch.sx-0.3)*(1/0.7)*im.width,((touch.sy-0.15)*(1/0.85))*im.height]
+        if (self.active_tool == self.selection_tool) and (touch.osx>0.3 and touch.osy<0.95):
+            self.area_end = [-(1-(touch.sx-self.image_begin[0])*(1/(self.image_end[0]-self.image_begin[0]))*im.width),-((touch.sy-self.image_end[1])*(1/(self.image_end[1]-self.image_begin[1]))*im.height)]
+            #print(self.area_start[0]/im.width,self.area_start[1]/im.height)
+            self.adjust_selection()
+            print(self.area_end)
             if self.P() < 50:
                 self.area_end[0],self.area_end[1],self.area_start[0],self.area_start[1] = 0,0,0,0
+        if (self.active_tool == self.calibration_tool) and (touch.osx>0.25 and touch.osy<0.95):
+            self.image_end[0],self.image_end[1] = touch.sx,touch.sy
+            print(self.image_end)
         if self.disabled:
             return
         for child in self.children[:]:
@@ -170,6 +215,7 @@ class IPC(FloatLayout):
     def open_file(self):
         popup = CustomPopup()
         popup.open()
+        self.init()
 
     def save_temp_image(self):
         global image_path
@@ -189,12 +235,17 @@ class IPC(FloatLayout):
 
     def activate_selection_tool(self):
         self.active_tool=self.selection_tool
+    
+    def activate_calibration_tool(self):
+        self.active_tool=self.calibration_tool
 
     def greyscale_image(self):
         global im
         self.make_backup()
         self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
         self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
+        print(self.area_start)
+        print(self.area_end)
         if self.P() < 50:
              im=io.applyOperationOnRegion(io.imageGrayScale,im,(0,0,im.width,im.height))
         else:
@@ -263,12 +314,27 @@ class IPC(FloatLayout):
         im=im.filter(ImageFilter.ModeFilter(int(self.slider1.value)))
         self.save_temp_image()
 
+    def filter_image_min(self):
+        global im
+        self.make_backup()
+        self.slider1.min=1
+        self.slider1.max=20
+        self.lbl1.text="Strength: "
+        x = int(self.slider1.value)
+        if x % 2 == 0:
+            x = x+1
+        im=im.filter(ImageFilter.MinFilter(x))
+        self.save_temp_image()
+
     def draw_text(self):
         global im
         self.make_backup()
+        self.lbl1.text="Size: "
+        self.slider1.max = 172
         draw = ImageDraw.Draw(im)
-        font = ImageFont.truetype("./assets/freefont/FreeMono.ttf", 72)
-        draw.text((10, 25), "world",fill=(0,0,0), font=font)
+        font = ImageFont.truetype("./assets/freefont/FreeMono.ttf", int(self.slider1.value))
+        s=input()
+        draw.text((self.area_start[0], self.area_start[1]), s,fill=(int(self.cp.color[0]),int(self.cp.color[1]),int(self.cp.color[2])), font=font)
         self.save_temp_image()
 
 class IPCApp(App):
