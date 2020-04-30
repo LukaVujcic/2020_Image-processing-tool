@@ -92,11 +92,14 @@ class CustomPopup(Popup):
 
 class IPC(FloatLayout):
     selection_tool = ObjectProperty(None)
-    resize_tool = ObjectProperty(None)
+    calibration_tool = ObjectProperty(None)
     crop_tool = ObjectProperty(None)
-    laso_tool = ObjectProperty(None)
     save_file_popup = ObjectProperty(None)
     text_tool = ObjectProperty(None)
+    greyscale_tool = ObjectProperty(None)
+    pixelate_tool = ObjectProperty(None)
+    brightness_tool = ObjectProperty(None)
+    grid_tool = ObjectProperty(None)
     contour_tool = ObjectProperty(None)
     find_edges_tool = ObjectProperty(None)
     sharpen_tool = ObjectProperty(None)
@@ -364,8 +367,8 @@ class IPC(FloatLayout):
         global im
         self.make_backup()
         self.lbl1.text="Strength: "
-        self.slider1.min=-20
-        self.slider1.max=20
+        self.slider1.min=0
+        self.slider1.max=10
         self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
         self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
         if self.P() < 50:
@@ -379,7 +382,7 @@ class IPC(FloatLayout):
         self.make_backup()
         self.lbl1.text="Strength: "
         self.slider1.min=1
-        self.slider1.max=20
+        self.slider1.max=500
         self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
         self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
         if self.P() < 50:
@@ -388,15 +391,10 @@ class IPC(FloatLayout):
             im=io.applyOperationOnRegion(io.imagePixelate,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),int(self.slider1.value))
         self.save_temp_image()
 
-    def make_grid(self): #TODO
+    def make_grid(self): #TODO fja vraca None pa save_temp puca
         global im
         self.make_backup()
-        self.lbl1.text="Strength: "
-        self.slider1.min=1
-        self.slider1.max=20
-        self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
-        self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
-        im=io.applyOperationOnRegion(io.imageBlur,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),int(self.slider1.value))
+        im=io.generateGridFromImage(im,4,3,None,None)
         self.save_temp_image()
 
 

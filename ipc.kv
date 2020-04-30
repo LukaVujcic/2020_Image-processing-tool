@@ -2,9 +2,12 @@
 
 <IPC>:
     selection_tool:selection_tool
-    resize_tool:resize_tool
+    calibration_tool:calibration_tool
     crop_tool:crop_tool
-    laso_tool:laso_tool
+    pixelate_tool:pixelate_tool
+    grid_tool:grid_tool
+    brightness_tool:brightness_tool
+    grayscale_tool:greyscale_tool
     text_tool:text_tool
     contour_tool:contour_tool
     find_edges_tool:find_edges_tool
@@ -55,7 +58,7 @@
             border:0,0,0,0
             on_release:root.activate_selection_tool()
         Button:
-            id:resize_tool
+            id:calibration_tool
             background_normal: "./assets/TransformScale-Icon.png"
             border:0,0,0,0
             on_release:root.activate_calibration_tool()
@@ -70,22 +73,25 @@
             on_release:root.draw_text()
 
         Button:
-            id:pen_tool
+            id:greyscale_tool
             background_normal: "./assets/BrushPencil-Icon.png"
             border:0,0,0,0
             on_release: root.greyscale_image()
         Button:
-            id:brush_tool
+            id:brightness_tool
             background_normal: "./assets/BrushPaintbrush-Icon.png"
             border:0,0,0,0
+            on_release: root.set_image_brightness()
         Button:
-            id:eraser_tool
+            id:pixelate_tool
             background_normal: "./assets/Eraser-Icon.png"
             border:0,0,0,0
+            on_release: root.pixelate_image()
         Button:
-            id:laso_tool
+            id:grid_tool
             background_normal: "./assets/SelectionLasso-Icon.png"
             border:0,0,0,0
+            on_release: root.make_grid()
 
         Button:
             id:contour_tool
