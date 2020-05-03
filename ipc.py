@@ -12,12 +12,13 @@ from kivy.uix.popup import Popup
 from kivy.uix.filechooser import FileChooserListLayout
 from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
+from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Ellipse, Line
 from kivy.properties import ObjectProperty
 from kivy.core.window import Window
 from PIL import Image, ImageFilter ,ImageFont, ImageDraw
 import imageOperations as io
-import os
+import os,threading,time
 import atexit
 
 
@@ -32,6 +33,20 @@ def exit_handler():
         print("Image Closed!")
     os.system("sudo umount tmp")
     os.system("sudo rm -r tmp")
+
+class TutorialPopup(Popup):
+    
+    ck_box = ObjectProperty(None)
+
+    def close_popup(self):
+        if self.ck_box.active:
+            try:
+                with open("config.txt","w") as f:
+                    f.write("0")
+                    f.close()
+            except IOError:
+                print("Warning:Greska pri upisu u config fajl!")
+        self.dismiss()
 
 class CustomPopup(Popup):
 
@@ -123,8 +138,8 @@ class IPC(FloatLayout):
     image_begin = [0.3,0.15]
     image_end = [1,0.8]
     active_tool = None
-    calibration_tool = 1
-
+    show_tutorial = 1
+    
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
         self._keyboard = None
@@ -145,9 +160,26 @@ class IPC(FloatLayout):
         #print(keycode[1])
 
     
-    def init(self):
+    def __init__(self,**kwargs):
+        super(IPC, self).__init__()
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
+
+        try:
+            with open("config.txt","r") as f:
+                self.show_tutorial = f.readline()
+                f.close()
+        except IOError:
+            print("WARNING: Greska pri citanju config fajla.")
+            self.show_tutorial = 1
+
+        print(self.show_tutorial)
+        if self.show_tutorial[0] == "1":
+            def f():
+                popup = TutorialPopup()
+                popup.open()
+            tutorial = threading.Timer(1.5,f)
+            tutorial.start()
     
     def P(self):
         return abs(self.area_start[0]-self.area_end[0]) * abs(self.area_start[1]-self.area_end[1])
@@ -227,7 +259,6 @@ class IPC(FloatLayout):
     def open_file(self):
         popup = CustomPopup()
         popup.open()
-        self.init()
 
     def save_temp_image(self):
         global image_path

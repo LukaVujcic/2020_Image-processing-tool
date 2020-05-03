@@ -54,6 +54,8 @@
         pos_hint:{"x":0,"top":0.9}
         Button:
             id:selection_tool
+            #text:"Selection\n   Tool"
+            #font_size:14
             background_normal: "./assets/SelectionRectangle-Icon.png"
             border:0,0,0,0
             on_release:root.activate_selection_tool()
@@ -253,3 +255,64 @@
                     Rectangle: 
                         pos: self.pos 
                         size: self.size
+
+
+<TutorialPopup>:
+
+    ck_box:ck_box
+    
+    size_hint:0.7,0.7
+    title:"Hello!"
+    auto_dismiss: False
+
+    FloatLayout:
+        size_hint:1,1
+        pos_hint:{"x":0,"y":0}
+        canvas.before: 
+            Color: 
+                rgba: 0,0,0.05,0.98
+            Rectangle: 
+                pos: self.pos
+                size: self.size 
+        Label:
+            text:"Welcome to our project!"
+            font_size:30
+            pos_hint:{"top":1,"x":0.25}
+            size_hint: 0.5,0.2
+            canvas.before: 
+                Color: 
+                    rgba: 1,0,0.05,0.98
+                Rectangle: 
+                    pos: self.pos
+                    size: self.size 
+        Label:
+            text:"Some text..."
+            pos_hint:{"y":0.2,"x":0.05}
+            size_hint: 0.9,0.6
+            canvas.before: 
+                Color: 
+                    rgba: 0,1,0.05,0.98
+                Rectangle: 
+                    pos: self.pos
+                    size: self.size
+
+        Button:
+            text:"Next"
+            pos_hint:{"x":0.5,"y":0.05}
+            size_hint:0.15,0.05
+
+        Button:
+            text:"Close"
+            pos_hint:{"x":0.65,"y":0.05}
+            size_hint:0.15,0.05
+            on_release:root.close_popup()
+        CheckBox:
+            id:ck_box
+            pos_hint:{"x":0.875,"y":0.05}
+            size_hint:0.05,0.05
+
+        Label:
+            text:"Don't Show this Window Again"
+            pos_hint:{"x":0.85,"y":0.005}
+            size_hint:0.1,0.05
+            font_size:10
