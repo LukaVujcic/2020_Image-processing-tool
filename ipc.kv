@@ -260,6 +260,7 @@
 <TutorialPopup>:
 
     ck_box:ck_box
+    lbl1:lbl1
     
     size_hint:0.7,0.7
     title:"Hello!"
@@ -286,7 +287,10 @@
                     pos: self.pos
                     size: self.size 
         Label:
-            text:"Some text..."
+            id:lbl1
+            halign:'left'
+            font_size:16
+            text:"Here are some things you should know..."
             pos_hint:{"y":0.2,"x":0.05}
             size_hint: 0.9,0.6
             canvas.before: 
@@ -300,6 +304,7 @@
             text:"Next"
             pos_hint:{"x":0.5,"y":0.05}
             size_hint:0.15,0.05
+            on_release:root.show_next_tip()
 
         Button:
             text:"Close"

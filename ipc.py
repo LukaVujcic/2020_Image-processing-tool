@@ -37,6 +37,8 @@ def exit_handler():
 class TutorialPopup(Popup):
     
     ck_box = ObjectProperty(None)
+    lbl1 = ObjectProperty(None)
+    no_tip = 0
 
     def close_popup(self):
         if self.ck_box.active:
@@ -47,6 +49,16 @@ class TutorialPopup(Popup):
             except IOError:
                 print("Warning:Greska pri upisu u config fajl!")
         self.dismiss()
+
+    def show_next_tip(self):
+
+        self.no_tip = self.no_tip + 1
+        if self.no_tip == 1:
+            self.lbl1.text = ("Tool Sheet:\n" +
+            "0  1  2  3\n" + "4  5  6  7\n" + "8  9  10 11\n" + "12 13 14 15\n" +
+            "0 - Area Selection\n"
+            "1 - Calibration Tool - Must use if image is not 16:9 ration,Use Mouse Click\non lower left side of the picture and release on upper rigth to Calibrate area selection tool")
+
 
 class CustomPopup(Popup):
 
