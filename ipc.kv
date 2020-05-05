@@ -54,8 +54,6 @@
         pos_hint:{"x":0,"top":0.9}
         Button:
             id:selection_tool
-            #text:"Selection\n   Tool"
-            #font_size:14
             background_normal: "./assets/SelectionRectangle-Icon.png"
             border:0,0,0,0
             on_release:root.activate_selection_tool()
@@ -76,7 +74,7 @@
 
         Button:
             id:greyscale_tool
-            background_normal: "./assets/GrayScale-Icon.png"
+            background_normal: "./assets/GrayScale-Icon2.png"
             border:0,0,0,0
             on_release: root.greyscale_image()
         Button:
@@ -86,23 +84,23 @@
             on_release: root.set_image_brightness()
         Button:
             id:pixelate_tool
-            background_normal: "./assets/Eraser-Icon.png"
+            background_normal: "./assets/Pixelate-Icon.png"
             border:0,0,0,0
             on_release: root.pixelate_image()
         Button:
             id:grid_tool
-            background_normal: "./assets/SelectionLasso-Icon.png"
+            background_normal: "./assets/Grid-Icon.png"
             border:0,0,0,0
             on_release: root.make_grid()
 
         Button:
             id:contour_tool
-            background_normal: "./assets/SelectionRectangle-Icon.png"
+            background_normal: "./assets/EdgeWhite-Icon2.png"
             border:0,0,0,0
             on_release:root.filter_image_countour()
         Button:
             id:find_edges_tool
-            background_normal: "./assets/EdgeDetect-Icon.png"
+            background_normal: "./assets/Edge-Icon2.png"
             border:0,0,0,0
             on_release:root.filter_image_find_edges()
         Button:
@@ -118,7 +116,7 @@
 
         Button:
             id:blur_tool
-            background_normal: "./assets/Blur-Icon.png"
+            background_normal: "./assets/Blur-Icon2.png"
             border:0,0,0,0
             on_release:root.filter_image_blur()
         Button:
@@ -142,7 +140,6 @@
         id:img_id
         size_hint:0.7,0.7
         pos_hint: {"x":0.3,"y":0.15}
-        #source: "1.jpeg"
 
     ColorPicker:
         id:cp
@@ -261,6 +258,7 @@
 
     ck_box:ck_box
     lbl1:lbl1
+    icons_img:icons_img
     
     size_hint:0.7,0.7
     title:"Hello!"
@@ -301,6 +299,11 @@
                     size: self.size
 
         Button:
+            text:"Previous"
+            pos_hint:{"x":0.35,"y":0.05}
+            size_hint:0.15,0.05
+            on_release:root.show_previous_tip()
+        Button:
             text:"Next"
             pos_hint:{"x":0.5,"y":0.05}
             size_hint:0.15,0.05
@@ -311,6 +314,7 @@
             pos_hint:{"x":0.65,"y":0.05}
             size_hint:0.15,0.05
             on_release:root.close_popup()
+            
         CheckBox:
             id:ck_box
             pos_hint:{"x":0.875,"y":0.05}
@@ -321,3 +325,7 @@
             pos_hint:{"x":0.85,"y":0.005}
             size_hint:0.1,0.05
             font_size:10
+
+        Image:
+            id:icons_img
+            size_hint:0,0

@@ -21,7 +21,6 @@ import imageOperations as io
 import os,threading,time
 import atexit
 
-
 image_path="./assets/white.jpeg"
 im = Image.open("./assets/white.jpeg")
 old = []
@@ -38,7 +37,9 @@ class TutorialPopup(Popup):
     
     ck_box = ObjectProperty(None)
     lbl1 = ObjectProperty(None)
+    icons_img = ObjectProperty(None)
     no_tip = 0
+    max_tips = 10
 
     def close_popup(self):
         if self.ck_box.active:
@@ -53,12 +54,31 @@ class TutorialPopup(Popup):
     def show_next_tip(self):
 
         self.no_tip = self.no_tip + 1
-        if self.no_tip == 1:
-            self.lbl1.text = ("Tool Sheet:\n" +
-            "0  1  2  3\n" + "4  5  6  7\n" + "8  9  10 11\n" + "12 13 14 15\n" +
-            "0 - Area Selection\n"
-            "1 - Calibration Tool - Must use if image is not 16:9 ration,Use Mouse Click\non lower left side of the picture and release on upper rigth to Calibrate area selection tool")
+        if self.no_tip == self.max_tips:
+            return
 
+        if self.no_tip == 0:
+            self.icons_img.size_hint = 0,0
+            self.lbl1.text = "Here are some things you should know..."
+
+        if self.no_tip == 1:
+            self.lbl1.text = ""
+            self.icons_img.pos_hint = {"y":0.25,"x":0.25}
+            self.icons_img.size_hint = 0.5,0.5
+            self.icons_img.source = "./assets/Tutorial.png"
+
+        if self.no_tip == 2:
+            self.icons_img.size_hint = 0,0
+            self.lbl1.text = ("0 - Area Selection\n"
+                            "1 - Calibration Tool - Must use if image is not 16:9 ration,Use Mouse Click\non lower left side of the picture and release on upper rigth to Calibrate area selection tool")
+
+    def show_previous_tip(self):
+
+        if self.no_tip == 0:
+            return
+
+        self.no_tip = self.no_tip - 2
+        self.show_next_tip()
 
 class CustomPopup(Popup):
 
@@ -111,7 +131,6 @@ class CustomPopup(Popup):
             if ext=='BMP' or ext=='JPEG' or ext=='PNG':
                 image=im.convert('RGB')
                 image.save(url,ext)
-                pass
         except ValueError:
             print('ValueError')
         except IOError:
