@@ -23,6 +23,7 @@ import atexit
 
 image_path="./assets/white.jpeg"
 im = Image.open("./assets/white.jpeg")
+root_path = os.getcwd() + "/"
 old = []
 wtp = ""
 
@@ -40,7 +41,7 @@ class TutorialPopup(Popup):
     lbl1 = ObjectProperty(None)
     icons_img = ObjectProperty(None)
     no_tip = 0
-    max_tips = 10
+    max_tips = 4
 
     def close_popup(self):
         if self.ck_box.active:
@@ -56,6 +57,7 @@ class TutorialPopup(Popup):
 
         self.no_tip = self.no_tip + 1
         if self.no_tip == self.max_tips:
+            self.no_tip -= 1
             return
 
         if self.no_tip == 0:
@@ -71,7 +73,22 @@ class TutorialPopup(Popup):
         if self.no_tip == 2:
             self.icons_img.size_hint = 0,0
             self.lbl1.text = ("0 - Area Selection\n"
-                            "1 - Calibration Tool - Must use if image is not 16:9 ration,Use Mouse Click\non lower left side of the picture and release on upper rigth to Calibrate area selection tool")
+                            "1 - Calibration Tool - Must use if image is not 16:9 ration,Use Mouse Click\non lower left side of the picture and release on upper rigth to Calibrate area selection tool\n"
+                            "2 - \n"
+                            "3 - Text Tool - Select the Area before using. After clicking type your text\ndon't worry if it doesn't show up immediately, pressing enter will print it!\n"
+                            "4 - Greyscaling the Image\n"
+                            "5 - Brightness Level\n"
+                            "6 - Pixelating Image\n"
+                            "7 - Making mini duplicates of the first image put together in a matrix\n")
+        if self.no_tip == 3:
+            self.lbl1.text = ("8 - Finds Image Contours\n"
+                            "9 - Finds Image Edges\n"
+                            "10 - Sharpens the Image\n"
+                            "11 - Smoothens the Image\n"
+                            "12 - Blurns the Image\n"
+                            "13 - UNSharpens the Image!\n"
+                            "14 - Creates a min filter. Picks the lowest pixel value in a window with the given size\n"
+                            "15 - Creates a mode filter. Picks the most frequent pixel value in a box with the given size\n")
 
     def show_previous_tip(self):
 
@@ -104,19 +121,18 @@ class CustomPopup(Popup):
         if os.system("cd tmp")!=0:
             os.system("sudo mkdir -p ./tmp")
             os.system("sudo mount -t ramfs -o size=50m ramfs ./tmp")
-        os.system("sudo cp " + image_path + " ./tmp/")
-                
+        print(os.system("sudo cp " + image_path + " ./tmp/"))
+
         c = len(image_path)-1
         while image_path[c]!='/' and c>0:
             c=c-1
         c=c+1
         file_name = image_path[c:]
         
-        image_path=image_path [:c]
+        image_path=root_path
         image_path=image_path + "tmp/" + file_name
 
         im = Image.open(image_path)
-        #IPC().reload_image() ne radi iz nekog razloga mora da se pozove iz IPC klase
         self.dismiss()
 
 
@@ -198,6 +214,8 @@ class IPC(FloatLayout):
                     wtp = wtp + text
         if keycode[1]=='shift':
             self.shift_pressed = True
+        if keycode[1]=='backspace':
+            wtp = wtp[:len(wtp)-1]
         
     def _on_keyboard_up(self, keyboard, keycode):
         if keycode[1]=='shift':
