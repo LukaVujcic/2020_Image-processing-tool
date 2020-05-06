@@ -453,7 +453,7 @@ class IPC(FloatLayout):
             im=io.applyOperationOnRegion(io.imagePixelate,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),int(self.slider1.value))
         self.save_temp_image()
 
-    def make_grid(self): #TODO fja vraca None pa save_temp puca
+    def make_grid(self):
         global im
         self.make_backup()
         im=io.generateGridFromImage(im,4,3,None,None)

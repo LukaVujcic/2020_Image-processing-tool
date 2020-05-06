@@ -102,7 +102,7 @@ def generateGridFromImage(myImage,in_column,in_row,new_width,new_height):
         #new_image.show()
         for j in range(0,in_column):
             for i in range(0,in_row):
-                new_image.paste(myimage,(i*w,j*h))
+                new_image.paste(myImage,(i*w,j*h))
         if new_height!=None and new_width!=None:
             new_image=new_image.resize((new_width,new_height))
         return new_image
