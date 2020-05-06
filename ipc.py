@@ -104,7 +104,8 @@ class CustomPopup(Popup):
         if os.system("cd tmp")!=0:
             os.system("sudo mkdir -p ./tmp")
             os.system("sudo mount -t ramfs -o size=50m ramfs ./tmp")
-        os.system("sudo cp " + image_path + " ./tmp/")
+        priv=os.system("sudo cp " + image_path + " ./tmp/")
+        print("sudo cp " + image_path + " ./tmp/")
                 
         c = len(image_path)-1
         while image_path[c]!='/' and c>0:
@@ -453,7 +454,7 @@ class IPC(FloatLayout):
         if self.P() < 50:
             im=io.applyOperationOnRegion(io.imageBrightness,im,(0,0,im.width,im.height),int(self.slider1.value),self.slider1.value)
         else:
-            im=io.applyOperationOnRegion(io.imageBrightness,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),int(self.slider1.value),seld.slider1.value)
+            im=io.applyOperationOnRegion(io.imageBrightness,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),int(self.slider1.value),self.slider1.value)
         self.save_temp_image()
 
     def pixelate_image(self):
@@ -473,7 +474,8 @@ class IPC(FloatLayout):
     def make_grid(self):
         global im
         self.make_backup()
-        im=io.generateGridFromImage(im,4,3,None,None)
+        width,height=im.size
+        im=io.generateGridFromImage(im,4,3,width,height)
         self.save_temp_image()
 
 
