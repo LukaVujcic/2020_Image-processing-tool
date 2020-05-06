@@ -104,8 +104,8 @@ class CustomPopup(Popup):
         if os.system("cd tmp")!=0:
             os.system("sudo mkdir -p ./tmp")
             os.system("sudo mount -t ramfs -o size=50m ramfs ./tmp")
-        priv=os.system("sudo cp " + image_path + " ./tmp/")
-        print("sudo cp " + image_path + " ./tmp/")
+        priv=os.system("sudo cp '" + image_path + "' ./tmp/")
+        #print("sudo cp " + image_path + " ./tmp/")
                 
         c = len(image_path)-1
         while image_path[c]!='/' and c>0:
