@@ -18,12 +18,13 @@ from kivy.properties import ObjectProperty
 from kivy.core.window import Window
 from PIL import Image, ImageFilter ,ImageFont, ImageDraw
 import imageOperations as io
-import os,threading,time
+import os,threading,time,sys
 import atexit
 
 image_path="./assets/white.jpeg"
 im = Image.open("./assets/white.jpeg")
 old = []
+wtp = ""
 
 def exit_handler():
     global im
@@ -170,6 +171,7 @@ class IPC(FloatLayout):
     image_end = [1,0.8]
     active_tool = None
     show_tutorial = 1
+    shift_pressed = False
     
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
@@ -183,18 +185,29 @@ class IPC(FloatLayout):
                 self.copy()
             if keycode[1] == 'v':
                 self.paste()
+
+        if keycode[1]=='enter':
+            self.draw_text()
+        if len(keycode[1])==1 or keycode[1]=='spacebar':
+            global wtp
+            if keycode[1]!='shift':
+                if self.shift_pressed == True:
+                    wtp = wtp + text.upper()
+                    print(text.upper())
+                else:
+                    wtp = wtp + text
+        if keycode[1]=='shift':
+            self.shift_pressed = True
         
-        #if keycode[1]=='enter':
+    def _on_keyboard_up(self, keyboard, keycode):
+        if keycode[1]=='shift':
+            self.shift_pressed = False
 
-        #global input
-        #input = input + keycode[1]
-        #print(keycode[1])
-
-    
     def __init__(self,**kwargs):
         super(IPC, self).__init__()
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
+        self._keyboard.bind(on_key_up=self._on_keyboard_up)
 
         try:
             with open("config.txt","r") as f:
@@ -400,6 +413,10 @@ class IPC(FloatLayout):
         im=im.filter(ImageFilter.MinFilter(x))
         self.save_temp_image()
 
+    def clear_wtp(self):
+        global wtp
+        wtp = ""
+
     def draw_text(self):
         global im
         self.make_backup()
@@ -407,8 +424,8 @@ class IPC(FloatLayout):
         self.slider1.max = 172
         draw = ImageDraw.Draw(im)
         font = ImageFont.truetype("./assets/freefont/FreeMono.ttf", int(self.slider1.value))
-        s=input()
-        draw.text((self.area_start[0], self.area_start[1]), s,fill=(int(self.cp.color[0]),int(self.cp.color[1]),int(self.cp.color[2])), font=font)
+        global wtp
+        draw.text((self.area_start[0], self.area_start[1]), wtp,fill=(int(self.cp.color[0]*255),int(self.cp.color[1]*255),int(self.cp.color[2])*255), font=font)
         self.save_temp_image()
 
     def copy(self):
