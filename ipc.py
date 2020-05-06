@@ -18,7 +18,7 @@ from kivy.properties import ObjectProperty
 from kivy.core.window import Window
 from PIL import Image, ImageFilter ,ImageFont, ImageDraw
 import imageOperations as io
-import os,threading,time,sys
+import os,threading,time,sys,math
 import atexit
 
 image_path="./assets/white.jpeg"
@@ -121,8 +121,7 @@ class CustomPopup(Popup):
         if os.system("cd tmp")!=0:
             os.system("sudo mkdir -p ./tmp")
             os.system("sudo mount -t ramfs -o size=50m ramfs ./tmp")
-        priv=os.system("sudo cp '" + image_path + "' ./tmp/")
-        #print("sudo cp " + image_path + " ./tmp/")
+        os.system("sudo cp '" + image_path + "' ./tmp/")
                 
         c = len(image_path)-1
         while image_path[c]!='/' and c>0:
@@ -286,7 +285,7 @@ class IPC(FloatLayout):
             self.area_start = [1-(touch.osx-self.image_begin[0])*(1/(self.image_begin[0]-self.image_end[0]))*im.width,-((touch.osy-self.image_end[1])*(1/(self.image_end[1]-self.image_begin[1]))*im.height)]
             #print(self.area_start[0]/im.width,self.area_start[1]/im.height)
             self.adjust_selection()
-            print(self.area_start)
+            #print(self.area_start)
         if (self.active_tool == self.calibration_tool) and (touch.osx>0.25 and touch.osy<0.95):
             self.image_begin[0],self.image_begin[1] = touch.osx,touch.osy
             print(self.image_begin)
@@ -302,7 +301,7 @@ class IPC(FloatLayout):
             self.area_end = [-(1-(touch.sx-self.image_begin[0])*(1/(self.image_end[0]-self.image_begin[0]))*im.width),-((touch.sy-self.image_end[1])*(1/(self.image_end[1]-self.image_begin[1]))*im.height)]
             #print(self.area_start[0]/im.width,self.area_start[1]/im.height)
             self.adjust_selection()
-            print(self.area_end)
+            #print(self.area_end)
             if self.P() < 50:
                 self.area_end[0],self.area_end[1],self.area_start[0],self.area_start[1] = 0,0,0,0
         if (self.active_tool == self.calibration_tool) and (touch.osx>0.25 and touch.osy<0.95):
@@ -493,7 +492,7 @@ class IPC(FloatLayout):
         global im
         self.make_backup()
         width,height=im.size
-        im=io.generateGridFromImage(im,4,3,width,height)
+        im=io.generateGridFromImage(im,math.floor(self.slider1.value),math.floor(self.slider2.value),width,height)
         self.save_temp_image()
 
 
