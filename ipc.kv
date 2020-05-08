@@ -64,7 +64,7 @@
             on_release:root.activate_calibration_tool()
         Button:
             id:crop_tool
-            background_normal: "./assets/SelectionScissors-Icon.png"
+            background_normal: "./assets/Contrast-Icon.png"
             border:0,0,0,0
             on_release:root.set_image_contrast()
         Button:
@@ -110,11 +110,10 @@
             border:0,0,0,0
             on_release:root.filter_image_sharpen()
         Button:
-            id:smooth_tool
-            background_normal: "./assets/TextTool-Icon.png"
+            id:unsharp_tool
+            background_normal: "./assets/UnSharp-Icon.png"
             border:0,0,0,0
-            #on_release:root.filter_image_smooth()
-            on_release:root.image_color_grade()
+            on_release:root.filter_image_unsharp()
 
         Button:
             id:blur_tool
@@ -122,18 +121,19 @@
             border:0,0,0,0
             on_release:root.filter_image_blur()
         Button:
-            id:unsharp_tool
-            background_normal: "./assets/BrushPaintbrush-Icon.png"
+            id:smooth_tool
+            background_normal: "./assets/ColorGrading-Icon.png"
             border:0,0,0,0
-            on_release:root.filter_image_unsharp()
+            #on_release:root.filter_image_smooth()
+            on_release:root.image_color_grade()
         Button:
             id:min_filter_tool
-            background_normal: "./assets/Eraser-Icon.png"
+            background_normal: "./assets/MinFilter-Icon.png"
             border:0,0,0,0
             on_release:root.filter_image_min()
         Button:
             id:mode_filter_tool
-            background_normal: "./assets/SelectionLasso-Icon.png"
+            background_normal: "./assets/ModeFilter-Icon.png"
             border:0,0,0,0
             on_release:root.filter_image_mode()
 
