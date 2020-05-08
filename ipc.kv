@@ -32,11 +32,8 @@
         size_hint: 0.4,0.05
         pos_hint: {"x":0,"top":1}
         Button:
-            id:file
-            text: "New"
-        Button:
             id:tools
-            text: "Open"
+            text: "Open/Save"
             on_release: root.open_file()
         Button:
             id:image
@@ -46,6 +43,10 @@
             id:image
             text: "Undo"
             on_release: root.undo()
+        Button:
+            id:file
+            text: "HELP!"
+            on_release: root.open_help()
 
     
     GridLayout:
@@ -202,6 +203,8 @@
 
     fc:fc
     txt_input:txt_input
+    img_w:img_w
+    img_h:img_h
 
     title: "Export/Open:"
     size_hint:0.7,0.7
@@ -225,14 +228,14 @@
         
         Button:
             size_hint:0.2,0.1
-            pos_hint:{"x":0.4,"y":0.02}
+            pos_hint:{"x":0.3,"y":0.02}
             text:"Open"
             on_release:root.open_image()
 
         Button:
-            text:"Cancel"
             size_hint:0.2,0.1
-            pos_hint:{"x":0.7,"y":0.02}
+            pos_hint:{"x":0.5,"y":0.02}
+            text:"Cancel"
             on_release:root.dismiss()
 
         TextInput:
@@ -240,6 +243,19 @@
             size_hint:0.8,0.1
             pos_hint:{"x":0.1,"y":0.15}
             multiline:False
+
+        TextInput:
+            id: img_w
+            size_hint:0.1,0.075
+            pos_hint:{"x":0.725,"y":0.025}
+        Label:
+            size_hint:0.05,0.05
+            pos_hint:{"x":0.825,"y":0.05}
+            text:"x"
+        TextInput:
+            id: img_h
+            size_hint:0.1,0.075
+            pos_hint:{"x":0.875,"y":0.025}
 
         FileChooser:
             id:fc
@@ -260,6 +276,7 @@
 
     ck_box:ck_box
     lbl1:lbl1
+    lbl2:lbl2
     icons_img:icons_img
     
     size_hint:0.7,0.7
@@ -269,36 +286,19 @@
     FloatLayout:
         size_hint:1,1
         pos_hint:{"x":0,"y":0}
-        canvas.before: 
-            Color: 
-                rgba: 0,0,0.05,0.98
-            Rectangle: 
-                pos: self.pos
-                size: self.size 
         Label:
+            id:lbl2
             text:"Welcome to our project!"
             font_size:30
             pos_hint:{"top":1,"x":0.25}
             size_hint: 0.5,0.2
-            canvas.before: 
-                Color: 
-                    rgba: 1,0,0.05,0.98
-                Rectangle: 
-                    pos: self.pos
-                    size: self.size 
         Label:
             id:lbl1
             halign:'left'
-            font_size:16
+            font_size:20
             text:"Here are some things you should know..."
             pos_hint:{"y":0.2,"x":0.05}
             size_hint: 0.9,0.6
-            canvas.before: 
-                Color: 
-                    rgba: 0,1,0.05,0.98
-                Rectangle: 
-                    pos: self.pos
-                    size: self.size
 
         Button:
             text:"Previous"

@@ -39,9 +39,10 @@ class TutorialPopup(Popup):
     
     ck_box = ObjectProperty(None)
     lbl1 = ObjectProperty(None)
+    lbl2 = ObjectProperty(None)
     icons_img = ObjectProperty(None)
     no_tip = 0
-    max_tips = 4
+    max_tips = 6
 
     def close_popup(self):
         if self.ck_box.active:
@@ -51,6 +52,12 @@ class TutorialPopup(Popup):
                     f.close()
             except IOError:
                 print("Warning:Greska pri upisu u config fajl!")
+        else:
+            try:
+                with open("config.txt","w") as f:
+                    f.write("1")
+            except IOError:
+                print("Warning:Greska pri unosu u config fajl!")
         self.dismiss()
 
     def show_next_tip(self):
@@ -66,29 +73,51 @@ class TutorialPopup(Popup):
 
         if self.no_tip == 1:
             self.lbl1.text = ""
-            self.icons_img.pos_hint = {"y":0.25,"x":0.25}
-            self.icons_img.size_hint = 0.5,0.5
+            self.icons_img.pos_hint = {"y":0.15,"x":0.15}
+            self.icons_img.size_hint = 0.7,0.7
             self.icons_img.source = "./assets/Tutorial.png"
 
         if self.no_tip == 2:
             self.icons_img.size_hint = 0,0
             self.lbl1.text = ("0 - Area Selection\n"
-                            "1 - Calibration Tool - Must use if image is not 16:9 ration,Use Mouse Click\non lower left side of the picture and release on upper rigth to Calibrate area selection tool\n"
-                            "2 - \n"
+                            "1 - Calibration Tool - Must use if image is not 16:9 ration,Use Mouse Click on lower left\nside of the picture and release on upper rigth to Calibrate area selection tool\n"
+                            "2 - Adjust Contrast\n"
                             "3 - Text Tool - Select the Area before using. After clicking type your text\ndon't worry if it doesn't show up immediately, pressing enter will print it!\n"
-                            "4 - Greyscaling the Image\n"
+                            "4 - Adjust Color Warmness\n"
                             "5 - Brightness Level\n"
                             "6 - Pixelating Image\n"
                             "7 - Making mini duplicates of the first image put together in a matrix\n")
         if self.no_tip == 3:
+            self.lbl2.text = "Welcome to our project!"
             self.lbl1.text = ("8 - Finds Image Contours\n"
                             "9 - Finds Image Edges\n"
                             "10 - Sharpens the Image\n"
-                            "11 - Smoothens the Image\n"
+                            "11 - UNSharpens the Image!\n"
                             "12 - Blurns the Image\n"
-                            "13 - UNSharpens the Image!\n"
+                            "13 - Color Grading - WARNING: Will take a LOT time to finish!\n"
                             "14 - Creates a min filter. Picks the lowest pixel value in a window with the given size\n"
-                            "15 - Creates a mode filter. Picks the most frequent pixel value in a box with the given size\n")
+                            "15 - Creates a mode filter. Picks the most frequent pixel value in a box with\nthe given size\n")
+        if self.no_tip == 4:
+            self.lbl2.text = "Sliders use and Slider Range:"
+            self.lbl1.text = ("Don't worry about exact range, you won't crash the program\n"
+                            "....Probably\n"
+                            "Area Selection: None\n"
+                            "Calibration Tool: None\n"
+                            "Contrast: First 0 - 30, 10 - Unchanged\n"
+                            "Text Tool: First 0 - 172\n"
+                            "Color Warmness: First 0-30, 10 - Unchanged\n"
+                            "Brightness: First 0 - 20, 10 - Unchanged\n"
+                            "Pixelate: First: 1 - 500\n"
+                            "Image Matrix: First Second - N x M\n")
+        if self.no_tip == 5:
+            self.lbl1.text = ("Contours: None\n"
+                            "Edges: None\n"
+                            "Sharpen: None\n"
+                            "Unsharpen: Radius Percent Threshold 1-30 0-500 0-15\n"
+                            "Blur: First 0-20\n"
+                            "Color Grading: First 0-20\n"
+                            "Min: First 0-20\n"
+                            "Mode: First 0-20\n")
 
     def show_previous_tip(self):
 
@@ -102,6 +131,8 @@ class CustomPopup(Popup):
 
     fc = ObjectProperty(None)
     txt_input = ObjectProperty(None)
+    img_w = ObjectProperty(None)
+    img_h = ObjectProperty(None)
 
     def update_text_input(self):
         for i in self.fc.selection:
@@ -147,6 +178,7 @@ class CustomPopup(Popup):
             ext=ext.upper()
             if ext=='BMP' or ext=='JPEG' or ext=='PNG':
                 image=im.convert('RGB')
+                image=im.resize((int(self.img_w.text),int(self.img_h.text)))
                 image.save(url,ext)
         except ValueError:
             print('ValueError')
@@ -317,6 +349,8 @@ class IPC(FloatLayout):
 
     def open_file(self):
         popup = CustomPopup()
+        width,height = im.size
+        popup.img_w.text,popup.img_h.text = str(width),str(height)
         popup.open()
 
     def save_temp_image(self):
@@ -334,6 +368,10 @@ class IPC(FloatLayout):
             print('ValueError')
         except IOError:
             print('IOError')
+
+    def open_help(self):
+        popup = TutorialPopup()
+        popup.open()
 
     def activate_selection_tool(self):
         self.active_tool=self.selection_tool
@@ -494,6 +532,10 @@ class IPC(FloatLayout):
     def make_grid(self):
         global im
         self.make_backup()
+        self.slider1.text="N: "
+        self.slider2.text="M: "
+        self.slider1.max = 20
+        self.slider2.max = 20
         width,height=im.size
         im=io.generateGridFromImage(im,math.floor(self.slider1.value),math.floor(self.slider2.value),width,height)
         self.save_temp_image()
@@ -504,6 +546,7 @@ class IPC(FloatLayout):
         self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
         self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
         self.slider1.max = 30
+        self.slider1.text="Strength: "
         param = self.slider1.value/10
         if self.P() < 50:
              im=io.applyOperationOnRegion(io.imageColor,im,(0,0,im.width,im.height),param)
@@ -517,6 +560,7 @@ class IPC(FloatLayout):
         self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
         self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
         self.slider1.max = 30
+        self.slider1.text="Strength: "
         param = self.slider1.value/10
         if self.P() < 50:
              im=io.applyOperationOnRegion(io.imageContrast,im,(0,0,im.width,im.height),param)
@@ -529,6 +573,7 @@ class IPC(FloatLayout):
         global im
         self.make_backup()
         self.slider1.max = 20
+        self.slider1.text = "Strength: "
         if self.slider1.value <= 10:
             strength = self.slider1.value/100
         else:
