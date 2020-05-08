@@ -66,6 +66,7 @@
             id:crop_tool
             background_normal: "./assets/SelectionScissors-Icon.png"
             border:0,0,0,0
+            on_release:root.set_image_contrast()
         Button:
             id: text_tool
             background_normal: "./assets/TextTool-Icon.png"
@@ -76,7 +77,7 @@
             id:greyscale_tool
             background_normal: "./assets/GrayScale-Icon2.png"
             border:0,0,0,0
-            on_release: root.greyscale_image()
+            on_release: root.set_color_warmness()
         Button:
             id:brightness_tool
             background_normal: "./assets/Brightness-Icon.png"
@@ -112,7 +113,8 @@
             id:smooth_tool
             background_normal: "./assets/TextTool-Icon.png"
             border:0,0,0,0
-            on_release:root.filter_image_smooth()
+            #on_release:root.filter_image_smooth()
+            on_release:root.image_color_grade()
 
         Button:
             id:blur_tool

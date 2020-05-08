@@ -16,7 +16,7 @@ from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Ellipse, Line
 from kivy.properties import ObjectProperty
 from kivy.core.window import Window
-from PIL import Image, ImageFilter ,ImageFont, ImageDraw
+from PIL import Image, ImageFilter ,ImageFont, ImageDraw, ImageEnhance
 import imageOperations as io
 import os,threading,time,sys,math
 import atexit
@@ -253,7 +253,6 @@ class IPC(FloatLayout):
             old.pop(0)
 
     def undo(self,*args):
-        #if args[0]==122 and args[3]==['ctrl']:
         global old
         global im
         if len(old)>=1:
@@ -261,8 +260,6 @@ class IPC(FloatLayout):
             old.pop(-1)
             self.save_temp_image()
         
-    #Window.bind(on_key_down=key_action)
-
     def adjust_selection(self):
         global im
         if self.area_start[0]<0:
@@ -465,13 +462,19 @@ class IPC(FloatLayout):
         self.make_backup()
         self.lbl1.text="Strength: "
         self.slider1.min=0
-        self.slider1.max=10
+        self.slider1.max=20
+        x = self.slider1.value
+        if x<=10:
+            param = x/10
+        else :
+            param = x-9
+        print(param)
         self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
         self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
         if self.P() < 50:
-            im=io.applyOperationOnRegion(io.imageBrightness,im,(0,0,im.width,im.height),int(self.slider1.value),self.slider1.value)
+            im=io.applyOperationOnRegion(io.imageBrightness,im,(0,0,im.width,im.height),int(self.slider1.value),param)
         else:
-            im=io.applyOperationOnRegion(io.imageBrightness,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),int(self.slider1.value),self.slider1.value)
+            im=io.applyOperationOnRegion(io.imageBrightness,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),int(self.slider1.value),param)
         self.save_temp_image()
 
     def pixelate_image(self):
@@ -495,6 +498,49 @@ class IPC(FloatLayout):
         im=io.generateGridFromImage(im,math.floor(self.slider1.value),math.floor(self.slider2.value),width,height)
         self.save_temp_image()
 
+    def set_color_warmness(self):
+        global im
+        self.make_backup()
+        self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
+        self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
+        self.slider1.max = 30
+        param = self.slider1.value/10
+        if self.P() < 50:
+             im=io.applyOperationOnRegion(io.imageColor,im,(0,0,im.width,im.height),param)
+        else:
+            im=io.applyOperationOnRegion(io.imageColor,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),param)
+        self.save_temp_image()
+
+    def set_image_contrast(self):
+        global im
+        self.make_backup()
+        self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
+        self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
+        self.slider1.max = 30
+        param = self.slider1.value/10
+        if self.P() < 50:
+             im=io.applyOperationOnRegion(io.imageContrast,im,(0,0,im.width,im.height),param)
+        else:
+            im=io.applyOperationOnRegion(io.imageContrast,im,(int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1])),param)
+        self.save_temp_image()
+
+    def image_color_grade(self):
+
+        global im
+        self.make_backup()
+        self.slider1.max = 20
+        if self.slider1.value <= 10:
+            strength = self.slider1.value/100
+        else:
+            strength = self.slider1.value/20
+        red, green, blue = self.cp.color[0]*255, self.cp.color[1]*255, self.cp.color[2]*255
+        w,h = im.size
+        for i in range(0,w):
+            for j in range(0,h):
+                pixel = im.getpixel((i,j))
+                new_pixel = (int(pixel[0] * (1-strength) + red * strength),int(pixel[1] * (1-strength) + green * strength),int(pixel[2] * (1 - strength) + blue * strength))
+                im.putpixel((i,j),new_pixel)
+        self.save_temp_image()
 
 class IPCApp(App):
     

@@ -66,6 +66,22 @@ def imageGrayScale(myimage):
         return myimage.convert('LA')
     except Exception as e:
         print(e)
+#Postavlja toplinu boja 0-crno belo 1-orginalna slika
+def imageColor(myImage,args):
+    try:
+        factor = args[0]
+        enhancer = ImageEnhance.Color(myImage)
+        return enhancer.enhance(factor)
+    except Exception as e:
+        print(e)
+
+def imageContrast(myImage,args):
+    try:
+        factor = args[0]
+        enhancer = ImageEnhance.Contrast(myImage)
+        return enhancer.enhance(factor)
+    except Exception as e:
+        print(e)
 #Bluruje sliku
 #def imageBlur(myImage,CoefBlur):
 def imageBlur(myImage,args):
@@ -129,3 +145,5 @@ def generateGridFromImage(myImage,in_column,in_row,new_width,new_height):
 #img=generateSolidColorImage(1000,1000,(0,255,255))
 #img.show()
 #myimage.close()
+#myimage = imageColor(myimage)
+#myimage.show()
