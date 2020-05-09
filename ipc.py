@@ -162,7 +162,6 @@ class CustomPopup(Popup):
         
         image_path=root_path
         image_path=image_path + "tmp/" + file_name
-
         im = Image.open(image_path)
         self.dismiss()
 
@@ -267,7 +266,6 @@ class IPC(FloatLayout):
             print("WARNING: Greska pri citanju config fajla.")
             self.show_tutorial = 1
 
-        print(self.show_tutorial)
         if self.show_tutorial[0] == "1":
             def f():
                 popup = TutorialPopup()
@@ -503,7 +501,7 @@ class IPC(FloatLayout):
         self.slider1.max=20
         x = self.slider1.value
         if x<=10:
-            param = x/10
+            param = x/100
         else :
             param = x-9
         print(param)
