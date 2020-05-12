@@ -1,4 +1,7 @@
 # 2020_Image-Processing-Tool
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9ca14b00868b426ea8467a9260eab19a)](https://app.codacy.com/gh/matf-pp/2020_Image-processing-tool?utm_source=github.com&utm_medium=referral&utm_content=matf-pp/2020_Image-processing-tool&utm_campaign=Badge_Grade_Dashboard)
+
 Alat za obradu slika radjen u pythonu pomocu bibloteka Kivy i Pillow
 ### Opis
 * Alat je namenjen obradi slika
