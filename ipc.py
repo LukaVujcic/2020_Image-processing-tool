@@ -10,7 +10,7 @@ import atexit
 
 image_path="./assets/white.jpeg"
 im = Image.open("./assets/white.jpeg")
-root_path = os.path.abspath() + "/"
+root_path = os.getcwd() + "/"
 old = []
 wtp = ""
 
@@ -401,7 +401,7 @@ class IPC(FloatLayout):
         make_backup()
         im=im.filter(ImageFilter.SMOOTH)
         self.save_temp_image()
-        
+
     def filter_image_blur(self):
         global im
         make_backup()
