@@ -5,7 +5,7 @@ from kivy.properties import ObjectProperty
 from kivy.core.window import Window
 from PIL import Image, ImageFilter ,ImageFont, ImageDraw
 import imageOperations as io
-import os,threading,math
+import subprocess,os,threading,math
 import atexit
 
 image_path="./assets/white.jpeg"
@@ -19,8 +19,8 @@ def exit_handler():
     if im is not None:
         im.close()
         print("Image Closed!")
-    os.system("sudo umount tmp")
-    os.system("sudo rm -r tmp")
+    subprocess.call(["sudo","umount","tmp"])
+    subprocess.call(["sudo","rm","-r","tmp"])
 
 class TutorialPopup(Popup):
     
@@ -134,10 +134,10 @@ class CustomPopup(Popup):
             image_path=i
 
         if os.system("cd tmp")!=0:
-            os.system("sudo mkdir -p ./tmp")
-            os.system("sudo mount -t ramfs -o size=50m ramfs ./tmp")
-        os.system("sudo cp '" + image_path + "' ./tmp/")
-                
+            subprocess.call(["sudo","mkdir","-p","./tmp"])
+            subprocess.call(["sudo","mount","-t","ramfs","-o","size=50m","ramfs","./tmp"])
+        subprocess.call(["sudo","cp",image_path,"./tmp/"])
+
         c = len(image_path)-1
         while image_path[c]!='/' and c>0:
             c=c-1
