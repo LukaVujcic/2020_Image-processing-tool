@@ -468,7 +468,7 @@ class IPC(FloatLayout):
         self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
         self.tmp_box = (int(self.area_start[0]),int(self.area_start[1]),int(self.area_end[0]),int(self.area_end[1]))
         print(self.tmp_box)
-    
+
     def paste(self):
         global im
         make_backup()
@@ -551,7 +551,6 @@ class IPC(FloatLayout):
         self.save_temp_image()
 
     def image_color_grade(self):
-
         global im
         make_backup()
         self.slider1.max = 20
