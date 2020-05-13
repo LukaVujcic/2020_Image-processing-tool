@@ -35,7 +35,7 @@ class TutorialPopup(Popup):
     lbl2 = ObjectProperty(None)
     icons_img = ObjectProperty(None)
     no_tip = 0
-    max_tips = 6
+    max_tips = 7
 
     def close_popup(self):
         if self.ck_box.active:
@@ -65,12 +65,16 @@ class TutorialPopup(Popup):
             self.lbl1.text = "Here are some things you should know..."
 
         if self.no_tip == 1:
+            self.lbl1.text = ("Use ctrl+c and ctrl+v to copy paste image region and ctrl+z to undo.\n"
+                            "Every time you open an image click Reload button so you can see it.\n"
+                            "You can save image as png,jpeg or bmp and in any size just by typing it in\nSave file popup.\n")
+        if self.no_tip == 2:
             self.lbl1.text = ""
             self.icons_img.pos_hint = {"y":0.15,"x":0.15}
             self.icons_img.size_hint = 0.7,0.7
             self.icons_img.source = "./assets/Tutorial.png"
 
-        if self.no_tip == 2:
+        if self.no_tip == 3:
             self.icons_img.size_hint = 0,0
             self.lbl1.text = ("0 - Area Selection\n"
                             "1 - Calibration Tool - Must use if image is not 16:9 ration,Use Mouse Click on lower left\nside of the picture and release on upper rigth to Calibrate area selection tool\n"
@@ -80,7 +84,7 @@ class TutorialPopup(Popup):
                             "5 - Brightness Level\n"
                             "6 - Pixelating Image\n"
                             "7 - Making mini duplicates of the first image put together in a matrix\n")
-        if self.no_tip == 3:
+        if self.no_tip == 4:
             self.lbl2.text = "Welcome to our project!"
             self.lbl1.text = ("8 - Finds Image Contours\n"
                             "9 - Finds Image Edges\n"
@@ -90,7 +94,7 @@ class TutorialPopup(Popup):
                             "13 - Color Grading - WARNING: Will take a LOT time to finish!\n"
                             "14 - Creates a min filter. Picks the lowest pixel value in a window with the given size\n"
                             "15 - Creates a mode filter. Picks the most frequent pixel value in a box with\nthe given size\n")
-        if self.no_tip == 4:
+        if self.no_tip == 5:
             self.lbl2.text = "Sliders use and Slider Range:"
             self.lbl1.text = ("Don't worry about exact range, you won't crash the program\n"
                             "....Probably\n"
@@ -102,7 +106,7 @@ class TutorialPopup(Popup):
                             "Brightness: First 0 - 20, 10 - Unchanged\n"
                             "Pixelate: First: 1 - 500\n"
                             "Image Matrix: First Second - N x M\n")
-        if self.no_tip == 5:
+        if self.no_tip == 6:
             self.lbl1.text = ("Contours: None\n"
                             "Edges: None\n"
                             "Sharpen: None\n"
@@ -289,7 +293,7 @@ class IPC(FloatLayout):
             self.area_end[0]=im.width
         if self.area_end[1]>im.height:
             self.area_end[1]=im.height
-
+            
     def update_labels(self):
         self.lbl1.text = self.lbl1.text[:self.lbl1.text.index(" ")] + " " + str(int(self.slider1.value))
         self.lbl2.text = self.lbl2.text[:self.lbl2.text.index(" ")] + " " + str(int(self.slider2.value))
