@@ -14,13 +14,19 @@ root_path = os.getcwd() + "/"
 old = []
 wtp = ""
 
+def make_backup(self):
+    global old
+    old.append(im.copy())
+    if len(old)>10:
+        old.pop(0)
+
 def exit_handler():
     global im
     if im is not None:
         im.close()
         print("Image Closed!")
-    subprocess.call(["sudo","umount","tmp"])
-    subprocess.call(["sudo","rm","-r","tmp"])
+    subprocess.call(["sudo","umount",root_path + "tmp"])
+    subprocess.call(["sudo","rm","-r",root_path + "tmp"])
 
 class TutorialPopup(Popup):
     
@@ -133,10 +139,10 @@ class CustomPopup(Popup):
         for i in self.fc.selection:
             image_path=i
 
-        if os.system("cd tmp")!=0:
-            subprocess.call(["sudo","mkdir","-p","./tmp"])
-            subprocess.call(["sudo","mount","-t","ramfs","-o","size=50m","ramfs","./tmp"])
-        subprocess.call(["sudo","cp",image_path,"./tmp/"])
+        if os.system("cd " +root_path+"tmp")!=0:
+            subprocess.call(["sudo","mkdir","-p",root_path+"tmp"])
+            subprocess.call(["sudo","mount","-t","ramfs","-o","size=50m","ramfs",root_path+"tmp"])
+        subprocess.call(["sudo","cp",image_path,root_path+"tmp/"])
 
         c = len(image_path)-1
         while image_path[c]!='/' and c>0:
@@ -237,7 +243,7 @@ class IPC(FloatLayout):
             self.shift_pressed = False
 
     def __init__(self,**kwargs):
-        """Makes Program Puck up Input"""
+        """Makes Program Puck up Input."""
         super(IPC, self).__init__()
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
@@ -261,11 +267,9 @@ class IPC(FloatLayout):
     def P(self):
         return abs(self.area_start[0]-self.area_end[0]) * abs(self.area_start[1]-self.area_end[1])
 
-    def make_backup(self):
-        global old
-        old.append(im.copy())
-        if len(old)>10:
-            old.pop(0)
+    def clear_wtp(self):
+        global wtp
+        wtp = ""
 
     def undo(self,*args):
         global old
@@ -363,7 +367,7 @@ class IPC(FloatLayout):
 
     def greyscale_image(self):
         global im
-        self.make_backup()
+        make_backup()
         self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
         self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
         print(self.area_start)
@@ -376,31 +380,31 @@ class IPC(FloatLayout):
     
     def filter_image_countour(self):
         global im
-        self.make_backup()
+        make_backup()
         im=im.filter(ImageFilter.CONTOUR)
         self.save_temp_image()
     
     def filter_image_find_edges(self):
         global im
-        self.make_backup()
+        make_backup()
         im=im.filter(ImageFilter.FIND_EDGES)
         self.save_temp_image()
 
     def filter_image_sharpen(self):
         global im
-        self.make_backup()
+        make_backup()
         im=im.filter(ImageFilter.SHARPEN)
         self.save_temp_image()
 
     def filter_image_smooth(self):
         global im
-        self.make_backup()
+        make_backup()
         im=im.filter(ImageFilter.SMOOTH)
         self.save_temp_image()
     
     def filter_image_blur(self):
         global im
-        self.make_backup()
+        make_backup()
         self.lbl1.text="Strength: "
         self.slider1.min=1
         self.slider1.max=20
@@ -414,7 +418,7 @@ class IPC(FloatLayout):
 
     def filter_image_unsharp(self):
         global im
-        self.make_backup()
+        make_backup()
         self.lbl1.text="Radius: "
         self.lbl2.text="Percent: "
         self.lbl3.text="Threshold: "
@@ -429,7 +433,7 @@ class IPC(FloatLayout):
 
     def filter_image_mode(self):
         global im
-        self.make_backup()
+        make_backup()
         self.slider1.min=1
         self.slider1.max=20
         self.lbl1.text="Strength: "
@@ -438,7 +442,7 @@ class IPC(FloatLayout):
 
     def filter_image_min(self):
         global im
-        self.make_backup()
+        make_backup()
         self.slider1.min=1
         self.slider1.max=20
         self.lbl1.text="Strength: "
@@ -448,13 +452,9 @@ class IPC(FloatLayout):
         im=im.filter(ImageFilter.MinFilter(x))
         self.save_temp_image()
 
-    def clear_wtp(self):
-        global wtp
-        wtp = ""
-
     def draw_text(self):
         global im
-        self.make_backup()
+        make_backup()
         self.lbl1.text="Size: "
         self.slider1.max = 172
         draw = ImageDraw.Draw(im)
@@ -471,7 +471,7 @@ class IPC(FloatLayout):
     
     def paste(self):
         global im
-        self.make_backup()
+        make_backup()
         self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
         self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
         im=io.copyOneRegionToAnother(im,self.tmp_box,(int(self.area_start[0]),int(self.area_start[1])))
@@ -479,7 +479,7 @@ class IPC(FloatLayout):
 
     def set_image_brightness(self):
         global im
-        self.make_backup()
+        make_backup()
         self.lbl1.text="Strength: "
         self.slider1.min=0
         self.slider1.max=20
@@ -499,7 +499,7 @@ class IPC(FloatLayout):
 
     def pixelate_image(self):
         global im
-        self.make_backup()
+        make_backup()
         self.lbl1.text="Strength: "
         self.slider1.min=1
         self.slider1.max=500
@@ -513,7 +513,7 @@ class IPC(FloatLayout):
 
     def make_grid(self):
         global im
-        self.make_backup()
+        make_backup()
         self.slider1.text="N: "
         self.slider2.text="M: "
         self.slider1.max = 20
@@ -524,7 +524,7 @@ class IPC(FloatLayout):
 
     def set_color_warmness(self):
         global im
-        self.make_backup()
+        make_backup()
         self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
         self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
         self.slider1.max = 30
@@ -538,7 +538,7 @@ class IPC(FloatLayout):
 
     def set_image_contrast(self):
         global im
-        self.make_backup()
+        make_backup()
         self.area_start[0],self.area_end[0] = min (self.area_start[0],self.area_end[0]), max(self.area_start[0],self.area_end[0])
         self.area_start[1],self.area_end[1] = min (self.area_start[1],self.area_end[1]), max(self.area_start[1],self.area_end[1])
         self.slider1.max = 30
@@ -553,7 +553,7 @@ class IPC(FloatLayout):
     def image_color_grade(self):
 
         global im
-        self.make_backup()
+        make_backup()
         self.slider1.max = 20
         self.slider1.text = "Strength: "
         if self.slider1.value <= 10:
@@ -570,7 +570,6 @@ class IPC(FloatLayout):
         self.save_temp_image()
 
 class IPCApp(App):
-    
     def build(self):
         return IPC()
 
