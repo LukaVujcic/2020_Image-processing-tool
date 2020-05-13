@@ -1,24 +1,11 @@
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.widget import Widget
-from kivy.uix.button import Button
-from kivy.uix.dropdown import DropDown
-from kivy.uix.image import Image as Im
-from kivy.uix.relativelayout import RelativeLayout
-from kivy.uix.slider import Slider
-from kivy.uix.colorpicker import ColorPicker
 from kivy.uix.popup import Popup
-from kivy.uix.filechooser import FileChooserListLayout
-from kivy.uix.popup import Popup
-from kivy.uix.textinput import TextInput
-from kivy.uix.checkbox import CheckBox
-from kivy.graphics import Color, Ellipse, Line
 from kivy.properties import ObjectProperty
 from kivy.core.window import Window
-from PIL import Image, ImageFilter ,ImageFont, ImageDraw, ImageEnhance
+from PIL import Image, ImageFilter ,ImageFont, ImageDraw
 import imageOperations as io
-import os,threading,time,sys,math
+import os,threading,math
 import atexit
 
 image_path="./assets/white.jpeg"
@@ -138,9 +125,6 @@ class CustomPopup(Popup):
         for i in self.fc.selection:
             self.txt_input.text=i
 
-    def close_save_file_popup(self):
-        popup.dismiss()
-
     def open_image(self):
 
         global image_path
@@ -253,6 +237,7 @@ class IPC(FloatLayout):
             self.shift_pressed = False
 
     def __init__(self,**kwargs):
+        """Makes Program Puck up Input"""
         super(IPC, self).__init__()
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
@@ -267,10 +252,10 @@ class IPC(FloatLayout):
             self.show_tutorial = 1
 
         if self.show_tutorial[0] == "1":
-            def f():
+            def g():
                 popup = TutorialPopup()
                 popup.open()
-            tutorial = threading.Timer(1.5,f)
+            tutorial = threading.Timer(1.5,g)
             tutorial.start()
     
     def P(self):
@@ -361,7 +346,6 @@ class IPC(FloatLayout):
                 image=im.convert('RGB')
                 image.save(url,ext)
                 self.reload_image()
-                pass
         except ValueError:
             print('ValueError')
         except IOError:

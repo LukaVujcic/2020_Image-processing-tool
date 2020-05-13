@@ -27,7 +27,7 @@ def applyOperationOnRegion(f,myImage,box,*argv):
         newImage=myImage.copy() #Pravimo novu sliku da ne bi original promenili
         if (len(argv)==0):
             newImage.paste(f(region),box=(box[0],box[1]))
-        else:    
+        else:
            # newImage.show()
             newImage.paste(f(region,argv),box=(box[0],box[1]))
         return newImage
@@ -104,7 +104,6 @@ def imageBrightness(myImage,args):
 def imagePixelate(myImage,args):
     try:
         coefPix=args[0]
-        h,w=myImage.size
         imgSmall = myImage.resize((coefPix,coefPix),resample=Image.BILINEAR)
         result = imgSmall.resize(myImage.size,Image.NEAREST)
         return result
