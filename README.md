@@ -10,10 +10,11 @@ Alat za obradu slika radjen u pythonu pomocu bibloteka Kivy i Pillow
 ### :computer: Platforma
 *   Aplikacija je namenjena korišćenju na Linux operativnom sistemu 
 ### :memo: Neophodne biblioteke
-*   Pillow
-*   Kivy
+*   Pillow  `sudo apt-get install python3-kivy`
+*   Kivy    `python3 -m pip install --upgrade Pillow`
 ### :wrench: Pokretanje
 `sudo python3 ipc.py`
+*   Za pokretanje izvrsnog fajla iz (Release-a) potreban je Ubuntu 19
 ### :joystick: Uputstvo
 *   Uputstvo za korišćenje se može videti prilikom pokretanja programa
 ### :email: Autori
