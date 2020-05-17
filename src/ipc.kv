@@ -1,0 +1,333 @@
+#:kivy 1.10.1
+
+<IPC>:
+    selection_tool:selection_tool
+    calibration_tool:calibration_tool
+    crop_tool:crop_tool
+    pixelate_tool:pixelate_tool
+    grid_tool:grid_tool
+    brightness_tool:brightness_tool
+    grayscale_tool:greyscale_tool
+    text_tool:text_tool
+    contour_tool:contour_tool
+    find_edges_tool:find_edges_tool
+    sharpen_tool:sharpen_tool
+    smooth_tool:smooth_tool
+    blur_tool:blur_tool
+    unsharp_tool:unsharp_tool
+    mode_filter_tool:mode_filter_tool
+    min_filter_tool:min_filter_tool
+    cp:cp
+
+    img_id:img_id
+    lbl1:lbl1
+    lbl2:lbl2
+    lbl3:lbl3
+    slider1:slider1
+    slider2:slider2
+    slider3:slider3
+
+    GridLayout:
+        cols:4
+        size_hint: 0.4,0.05
+        pos_hint: {"x":0,"top":1}
+        Button:
+            id:tools
+            text: "Open/Save"
+            on_release: root.open_file()
+        Button:
+            id:image
+            text: "Reload"
+            on_release: root.reload_image()
+        Button:
+            id:image
+            text: "Undo"
+            on_release: root.undo()
+        Button:
+            id:file
+            text: "HELP!"
+            on_release: root.open_help()
+
+    
+    GridLayout:
+        cols: 4
+        size_hint: 0.175,0.3
+        pos_hint:{"x":0,"top":0.9}
+        Button:
+            id:selection_tool
+            background_normal: "../assets/SelectionRectangle-Icon.png"
+            border:0,0,0,0
+            on_release:root.activate_selection_tool()
+        Button:
+            id:calibration_tool
+            background_normal: "../assets/TransformScale-Icon.png"
+            border:0,0,0,0
+            on_release:root.activate_calibration_tool()
+        Button:
+            id:crop_tool
+            background_normal: "../assets/Contrast-Icon.png"
+            border:0,0,0,0
+            on_release:root.set_image_contrast()
+        Button:
+            id: text_tool
+            background_normal: "../assets/TextTool-Icon.png"
+            border:0,0,0,0
+            on_release:root.clear_wtp()
+
+        Button:
+            id:greyscale_tool
+            background_normal: "../assets/GrayScale-Icon2.png"
+            border:0,0,0,0
+            on_release: root.set_color_warmness()
+        Button:
+            id:brightness_tool
+            background_normal: "../assets/Brightness-Icon.png"
+            border:0,0,0,0
+            on_release: root.set_image_brightness()
+        Button:
+            id:pixelate_tool
+            background_normal: "../assets/Pixelate-Icon.png"
+            border:0,0,0,0
+            on_release: root.pixelate_image()
+        Button:
+            id:grid_tool
+            background_normal: "../assets/Grid-Icon.png"
+            border:0,0,0,0
+            on_release: root.make_grid()
+
+        Button:
+            id:contour_tool
+            background_normal: "../assets/EdgeWhite-Icon2.png"
+            border:0,0,0,0
+            on_release:root.filter_image_countour()
+        Button:
+            id:find_edges_tool
+            background_normal: "../assets/Edge-Icon2.png"
+            border:0,0,0,0
+            on_release:root.filter_image_find_edges()
+        Button:
+            id:sharpen_tool
+            background_normal: "../assets/Sharp-Icon.png"
+            border:0,0,0,0
+            on_release:root.filter_image_sharpen()
+        Button:
+            id:unsharp_tool
+            background_normal: "../assets/UnSharp-Icon.png"
+            border:0,0,0,0
+            on_release:root.filter_image_unsharp()
+
+        Button:
+            id:blur_tool
+            background_normal: "../assets/Blur-Icon2.png"
+            border:0,0,0,0
+            on_release:root.filter_image_blur()
+        Button:
+            id:smooth_tool
+            background_normal: "../assets/ColorGrading-Icon.png"
+            border:0,0,0,0
+            #on_release:root.filter_image_smooth()
+            on_release:root.image_color_grade()
+        Button:
+            id:min_filter_tool
+            background_normal: "../assets/MinFilter-Icon.png"
+            border:0,0,0,0
+            on_release:root.filter_image_min()
+        Button:
+            id:mode_filter_tool
+            background_normal: "../assets/ModeFilter-Icon.png"
+            border:0,0,0,0
+            on_release:root.filter_image_mode()
+
+
+    Image:
+        id:img_id
+        size_hint:0.7,0.7
+        pos_hint: {"x":0.3,"y":0.15}
+
+    ColorPicker:
+        id:cp
+        color:0,0,0,1
+        size_hint:0.3,0.4
+        pos_hint: {"left":1,"bot":1}
+    
+    FloatLayout:
+        size_hint:0.3,0.1
+        pos_hint: {"x":0,"top":0.5}
+        Label:
+            id:lbl3
+            pos_hint: {"x":-0.4,"top":1}
+            text:"Threshold: "
+            color:1,1,1,1
+        Slider:
+            id:slider3
+            pos_hint: {"right":1,"top":1}
+            size_hint:0.75,1
+            min:0
+            max:100
+            on_touch_move:root.update_labels()
+
+    FloatLayout:
+        size_hint:0.3,0.1
+        pos_hint: {"x":0,"top":0.55}
+        Label:
+            id:lbl2
+            pos_hint: {"x":-0.4,"top":1}
+            text:"Percent: "
+            color:1,1,1,1
+        Slider:
+            id:slider2
+            pos_hint: {"right":1,"top":1}
+            size_hint:0.75,1
+            min:0
+            max:100
+            on_touch_move:root.update_labels()
+
+    FloatLayout:
+        size_hint:0.3,0.1
+        pos_hint: {"x":0,"top":0.6}
+        Label:
+            id:lbl1
+            pos_hint: {"x":-0.4,"top":1}
+            text:"Strength: "
+            color:1,1,1,1
+        Slider:
+            id:slider1
+            pos_hint: {"right":1,"top":1}
+            size_hint:0.75,1
+            min:0
+            max:100
+            on_touch_move:root.update_labels()
+
+
+<CustomPopup>:
+
+    fc:fc
+    txt_input:txt_input
+    img_w:img_w
+    img_h:img_h
+
+    title: "Export/Open:"
+    size_hint:0.7,0.7
+    pos_hint:{"x":0.15,"y":0.15}
+    auto_dismiss: False
+    FloatLayout:
+        size_hint:1,1
+        pos_hint:{"x":0,"y":0}
+        canvas.before: 
+            Color: 
+                rgba: 0,0,0.05,0.98
+            Rectangle: 
+                pos: self.pos
+                size: self.size 
+
+        Button:
+            size_hint:0.2,0.1
+            pos_hint:{"x":0.1,"y":0.02}
+            text:"Export"
+            on_release:root.save_file()
+        
+        Button:
+            size_hint:0.2,0.1
+            pos_hint:{"x":0.3,"y":0.02}
+            text:"Open"
+            on_release:root.open_image()
+
+        Button:
+            size_hint:0.2,0.1
+            pos_hint:{"x":0.5,"y":0.02}
+            text:"Cancel"
+            on_release:root.dismiss()
+
+        TextInput:
+            id: txt_input
+            size_hint:0.8,0.1
+            pos_hint:{"x":0.1,"y":0.15}
+            multiline:False
+
+        TextInput:
+            id: img_w
+            size_hint:0.1,0.075
+            pos_hint:{"x":0.725,"y":0.025}
+        Label:
+            size_hint:0.05,0.05
+            pos_hint:{"x":0.825,"y":0.05}
+            text:"x"
+        TextInput:
+            id: img_h
+            size_hint:0.1,0.075
+            pos_hint:{"x":0.875,"y":0.025}
+
+        FileChooser:
+            id:fc
+            size_hint:0.8,0.6
+            pos_hint:{"x":0.1,"y":0.3}
+            path:"./"
+            on_touch_up:root.update_text_input()
+            FileChooserListLayout:
+                canvas.before: 
+                    Color: 
+                        rgba: 0,0.05,0.1,0.7
+                    Rectangle: 
+                        pos: self.pos 
+                        size: self.size
+
+
+<TutorialPopup>:
+
+    ck_box:ck_box
+    lbl1:lbl1
+    lbl2:lbl2
+    icons_img:icons_img
+    
+    size_hint:0.7,0.7
+    title:"Hello!"
+    auto_dismiss: False
+
+    FloatLayout:
+        size_hint:1,1
+        pos_hint:{"x":0,"y":0}
+        Label:
+            id:lbl2
+            text:"Welcome to our project!"
+            font_size:30
+            pos_hint:{"top":1,"x":0.25}
+            size_hint: 0.5,0.2
+        Label:
+            id:lbl1
+            halign:'left'
+            font_size:20
+            text:"Here are some things you should know..."
+            pos_hint:{"y":0.2,"x":0.05}
+            size_hint: 0.9,0.6
+
+        Button:
+            text:"Previous"
+            pos_hint:{"x":0.35,"y":0.05}
+            size_hint:0.15,0.05
+            on_release:root.show_previous_tip()
+        Button:
+            text:"Next"
+            pos_hint:{"x":0.5,"y":0.05}
+            size_hint:0.15,0.05
+            on_release:root.show_next_tip()
+
+        Button:
+            text:"Close"
+            pos_hint:{"x":0.65,"y":0.05}
+            size_hint:0.15,0.05
+            on_release:root.close_popup()
+            
+        CheckBox:
+            id:ck_box
+            pos_hint:{"x":0.875,"y":0.05}
+            size_hint:0.05,0.05
+
+        Label:
+            text:"Don't Show this Window Again"
+            pos_hint:{"x":0.85,"y":0.005}
+            size_hint:0.1,0.05
+            font_size:10
+
+        Image:
+            id:icons_img
+            size_hint:0,0
